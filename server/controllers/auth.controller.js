@@ -5,16 +5,17 @@ const { hashPassword, comparePassword } = require('../utils/passwords');
 const generateToken = require('../utils/generateToken');
 
 const registerController = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
     try {
         const user = await User.findOne({ email });
         if (user) {
             return ApiError(400, 'Email already exists', null, res);
         }
+        
         const hashedPassword = await hashPassword(password);
-        const newUser = await User.create({ name, email, password: hashedPassword });
+        const newUser = await User.create({ name, email, password: hashedPassword, role: role });
 
-        return ApiResponse(201, 'User created successfully', data = newUser, res);
+        return ApiResponse(201, 'User created successfully', data = null, res);
     } catch (error) {
         console.log('Server Error: ', error.message);
         return ApiError(500, error.message, error, res);
