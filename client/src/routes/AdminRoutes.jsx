@@ -29,7 +29,7 @@ export const AdminRoutes = {
         {
             path: "reports",
             element: <Reports />
-        }
+        },  
     ]
 
 }

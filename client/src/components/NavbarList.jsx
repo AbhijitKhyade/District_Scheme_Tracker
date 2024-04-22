@@ -4,6 +4,7 @@ import {
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import logo from '../assets/logo.webp';
+import ButtonComp from "./Button";
 
 export default function NavbarList() {
   return (
@@ -29,11 +30,7 @@ export default function NavbarList() {
               to={"/auth/login"}
               className="w-full flex items-center justify-end"
             >
-              <Button
-                className="h-9"
-              >
-                Log In
-              </Button>
+              <ButtonComp name={"Log In"} className={'h-9'} />
             </Link>
 
           </div>

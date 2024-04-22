@@ -13,6 +13,7 @@ import axios from 'axios';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BASE_URL } from '../../api';
+import ButtonComp from '../../components/Button';
 
 export default function Register() {
 
@@ -211,25 +212,11 @@ export default function Register() {
           </div>
           {!citizen ? (
             <>
-              <Button
-                disabled={false}
-                type="submit"
-                className="mt-4 mb-2"
-                fullWidth
-              >
-                Verify and Register
-              </Button>
+              <ButtonComp name={"Verify and Register"} type={'submit'} className={'mt-4 mb-2'} fullWidth />
             </>
           ) : (
             <>
-              <Button
-                disabled={false}
-                type="submit"
-                className="mt-4 mb-2"
-                fullWidth
-              >
-                Register
-              </Button>
+              <ButtonComp name={"Register"} type={'submit'} className={'mt-4 mb-2'} fullWidth />
             </>
           )}
 

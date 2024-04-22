@@ -7,6 +7,7 @@ import {
 } from "@material-tailwind/react";
 import { Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import ButtonComp from '../../components/Button';
 
 export default function ForgotPassword() {
   return (
@@ -52,15 +53,7 @@ export default function ForgotPassword() {
             </div>
           </div>
 
-
-          <Button
-            disabled={false}
-            type="submit"
-            className="mt-4 mb-2"
-            fullWidth
-          >
-            Send Email
-          </Button>
+          <ButtonComp name={"Send Email"} type={'submit'} className={'mt-4 mb-2'} fullWidth />
 
         </form>
       </Card>

@@ -11,6 +11,7 @@ import axios from 'axios';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BASE_URL } from '../../api';
+import ButtonComp from '../../components/Button';
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -162,14 +163,7 @@ export default function Login() {
             </div>
           </div>
 
-          <Button
-            disabled={false}
-            type="submit"
-            className="mt-4 mb-2"
-            fullWidth
-          >
-            Login
-          </Button>
+          <ButtonComp name={"Login"} type={'submit'} className={'mt-4 mb-2'} fullWidth />
 
           <div className="flex justify-between">
             <span className="text-gray-700 mt-2 text-sm">
