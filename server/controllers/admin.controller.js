@@ -1,9 +1,12 @@
 const DistrictOfficer = require('../models/district-officer.model');
 const Officer = require('../models/officers.model');
+const Schemes = require('../models/scheme.model');
 const ApiError = require('../utils/ApiError');
 const ApiResponse = require('../utils/ApiResponse');
 const mongoose = require('mongoose');
 
+
+// OFFICERS
 const officerNamesUpload = async (req, res) => {
     try {
         const officerNamesArray = req.body.data.map(item => Object.values(item)[0]);
@@ -128,10 +131,42 @@ const officerDistrictEdit = async (req, res) => {
     }
 };
 
+// GOVT SCHEMES
+const governmentSchemes = async (req, res) => {
+    try {
+        const { scheme, objective, description, parameters } = req.body;
+        await Schemes.create({ govt_scheme: scheme, objective, description, parameters });
+        return ApiResponse(201, 'Government Scheme added successfully', null, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+};
+
+const allGovernmentSchemes = async (req, res) => {
+    try {
+        const allSchemes = await Schemes.find();
+        return ApiResponse(200, 'All Government Schemes', allSchemes, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+}
+
+const governmentSchemesDelete = async (req, res) => {
+    try {
+        const id = req.query.id;
+        console.log(id);
+        await Schemes.findByIdAndDelete(id);
+        return ApiResponse(200, 'Govt Scheme deleted Successfully', null, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+}
+
 
 
 
 module.exports = {
     officerNamesUpload, getAllOfficersNames, officerDistrict, officerDistrictData
-    , officerDistrictDelete, officerDistrictEdit
+    , officerDistrictDelete, officerDistrictEdit, governmentSchemes, allGovernmentSchemes,
+    governmentSchemesDelete
 };
