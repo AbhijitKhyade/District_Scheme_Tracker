@@ -1,20 +1,16 @@
 const mongoose = require('mongoose');
 
-const OfficerSchema = mongoose.Schema({
-    names: [
-        {
-            name: {
-                type: String,
-                required: true
-            },
-            email: {
-                type: String,
-                required: true
-            },
-        },
-    ],
+const officerSchema = mongoose.Schema({
+    officerName: {
+        type: String,
+        required: true
+    },
+    officerEmail: {
+        type: String,
+        required: true
+    },
 });
 
-const Officer = mongoose.model('Officer', OfficerSchema);
+const Officer = mongoose.model('Officer', officerSchema);
 
 module.exports = Officer;

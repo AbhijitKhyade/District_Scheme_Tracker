@@ -5,6 +5,7 @@ import District_Officers from '../pages/Admin/District_Officers'
 import Govt_Schemes from '../pages/Admin/Govt_Schemes'
 import District_Monitoring from '../pages/Admin/District_Monitoring'
 import Reports from '../pages/Admin/Reports'
+import Manage_Officers from '../pages/Admin/Manage_Officers'
 
 export const AdminRoutes = {
     path: "admin/",
@@ -29,7 +30,11 @@ export const AdminRoutes = {
         {
             path: "reports",
             element: <Reports />
-        },  
+        },
+        {
+            path: "manage-officers",
+            element: <Manage_Officers />
+        },
     ]
 
 }

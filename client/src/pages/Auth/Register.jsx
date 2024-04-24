@@ -25,6 +25,7 @@ export default function Register() {
   });
   const [citizen, setCitizen] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -83,7 +84,8 @@ export default function Register() {
         theme: "light",
       });
       return;
-    } else if (!formData.password) {
+    }
+    else if (!formData.password) {
       toast.warning("Please enter your password", {
         position: "top-left",
         autoClose: 1500,
@@ -96,10 +98,30 @@ export default function Register() {
       });
       return;
     }
+
     try {
-      const response = await axios.post(`${BASE_URL}/auth/register`, formData);
-      console.log(response.data);
-      navigate('/auth/login');
+      setLoading(true);
+      if (formData.role === 'Citizen') {
+        const response = await axios.post(`${BASE_URL}/auth/register`, formData);
+        console.log(response.data);
+        navigate('/auth/login');
+      } else {
+        const response = await axios.post(`${BASE_URL}/auth/verify-officer`, formData);
+        console.log(response.data);
+        navigate('/auth/login');
+      }
+      setLoading(false);
+      toast.success(response?.data.message, {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+
     } catch (error) {
       console.log('Error:', error?.response?.data?.message);
       toast.error(error?.response?.data?.message, {
@@ -112,6 +134,7 @@ export default function Register() {
         progress: undefined,
         theme: "light",
       });
+      setLoading(false);
     }
   }
 
@@ -212,11 +235,11 @@ export default function Register() {
           </div>
           {!citizen ? (
             <>
-              <ButtonComp name={"Verify and Register"} type={'submit'} className={'mt-4 mb-2'} fullWidth />
+              <ButtonComp name={"Verify and Register"} type={'submit'} className={'mt-4 mb-2'} fullWidth loading={loading} />
             </>
           ) : (
             <>
-              <ButtonComp name={"Register"} type={'submit'} className={'mt-4 mb-2'} fullWidth />
+              <ButtonComp name={"Register"} type={'submit'} className={'mt-4 mb-2'} fullWidth loading={loading} />
             </>
           )}
 

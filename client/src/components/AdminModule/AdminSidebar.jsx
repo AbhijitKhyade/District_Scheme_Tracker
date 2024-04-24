@@ -39,11 +39,11 @@ const links = [
         path: "district-monitoring",
         icon: <MdRateReview className="h-5 w-5" />,
       },
-      {
-        name: "Reports",
-        path: "reports",
-        icon: <BiSolidReport className="h-5 w-5" />,
-      },
+      // {
+      //   name: "Reports",
+      //   path: "reports",
+      //   icon: <BiSolidReport className="h-5 w-5" />,
+      // },
     ],
   },
 ];

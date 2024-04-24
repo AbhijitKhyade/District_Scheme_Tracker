@@ -13,9 +13,20 @@ const districtOfficerSchema = new mongoose.Schema({
                         type: String,
                         required: true
                     },
-                    officer: {
+                    officer: [
+                        {
+                            officerName: {
+                                type: String,
+                                required: true
+                            },
+                            officerEmail: {
+                                type: String,
+                                required: true
+                            }
+                        }
+                    ],
+                    mapUrl: {
                         type: String,
-                        required: true
                     }
                 }
             ]

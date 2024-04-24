@@ -20,9 +20,12 @@ export default function District_Officers() {
   const [formData, setFormData] = useState({
     state: "",
     district: "",
-    officer: "",
+    officerName: "",
+    officerEmail: "",
+    mapUrl: "",
   });
   const [officers, setOfficers] = useState([]);
+  const [officersEmail, setOfficersEmail] = useState([]);
   const [districtOfficers, setDistrictOfficers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false); // State for delete confirmation dialog
@@ -33,11 +36,14 @@ export default function District_Officers() {
 
   const handleInputChange = (selectedOption, { name }) => {
     const selectedValue = selectedOption ? selectedOption.value : "";
+
     setFormData({
       ...formData,
       [name]: selectedValue,
     });
   };
+
+
 
   const handleAssignOfficer = async () => {
     console.log('formData', formData);
@@ -48,18 +54,32 @@ export default function District_Officers() {
       setFormData({
         state: "",
         district: "",
-        officer: "",
+        officerName: "",
+        officerEmail: "",
+        mapUrl: "",
       });
 
     } catch (error) {
-      console.log('Error: ', error);
+      console.log('Error: ', error.response.data.message);
+
     }
   };
 
   const getOfficers = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/admin/get-officers-names`);
-      setOfficers(response?.data?.data[0].names);
+      // console.log('Officers:', response?.data?.data);
+      const officersData = response?.data?.data;
+      let officersNames = [], officersEmails = [];
+      officersData.forEach(officer => {
+        officersNames.push(officer.officerName);
+      });
+      officersData.forEach(officer => {
+        officersEmails.push(officer.officerEmail);
+      });
+      console.log(officersData);
+      setOfficersEmail(officersEmails);
+      setOfficers(officersNames);
     } catch (error) {
       console.error('Error getting officers:', error);
     }
@@ -68,6 +88,7 @@ export default function District_Officers() {
   const getDistrictOfficers = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/admin/officer-district-data`);
+      console.log('District Officers:', response?.data?.data);
       setDistrictOfficers(response?.data?.data);
     } catch (error) {
       console.log('Error: ', error);
@@ -97,13 +118,21 @@ export default function District_Officers() {
   const handleSave = async () => {
     try {
       console.log('selectedStateId:', selectedStateId);
-      const response = await axios.put(`${BASE_URL}/admin/officer-district-edit?id=${editedDistrict._id}&stateId=${selectedStateId}`, editedDistrict);
+      const { officer, ...editedDistrictWithoutOfficer } = editedDistrict;
+      const editedData = {
+        ...editedDistrictWithoutOfficer,
+        officer: [{ officerName: officer[0].officerName, officerEmail: officer[0].officerEmail }]
+      };
+      const response = await axios.put(`${BASE_URL}/admin/officer-district-edit?id=${editedDistrict._id}&stateId=${selectedStateId}`, editedData);
       setEditMode(null);
       await getDistrictOfficers();
     } catch (error) {
       console.error('Error updating district officer:', error);
     }
   };
+
+
+
 
   return (
     <div className='m-2 px-4'>
@@ -145,32 +174,63 @@ export default function District_Officers() {
             />
           </div>
           <div className="w-1/2 sm:w-full">
+            <Typography variant='h5'>Map Url</Typography>
+            <Input
+              type="text"
+              value={formData.mapUrl}
+              onChange={(e) => setFormData({ ...formData, mapUrl: e.target.value })}
+              placeholder="Enter Map Url"
+              className="w-full"
+              label='Map Url'
+            />
+          </div>
+        </div>
+        <div className="flex items-center justify-center gap-5  mx-3 w-full sm:flex-col lg:flex-row mt-4">
+          <div className="w-1/2 sm:w-full">
             <Typography variant='h5'>Officers</Typography>
             <Select
               options={officers?.map(officer => ({ value: officer, label: officer }))}
-              name='officer'
-              onChange={(value) => handleInputChange(value, { name: "officer" })}
+              name='officerName'
+              onChange={(value) => handleInputChange(value, { name: "officerName" })}
               isDisabled={!formData.state || !formData.district}
               placeholder="Select Officer"
               classNamePrefix="select"
             />
           </div>
+          <div className="w-1/2 sm:w-full">
+            <Typography variant='h5'>Officers Email</Typography>
+            <Select
+              options={officersEmail?.map(officer => ({ value: officer, label: officer }))}
+              name='officerEmail'
+              onChange={(value) => handleInputChange(value, { name: "officerEmail" })}
+              isDisabled={!formData.state || !formData.district}
+              placeholder="Select Officer Email"
+              classNamePrefix="select"
+            />
+          </div>
         </div>
+
         <div className="mt-4 flex flex-col justify-center items-center">
-          {formData.district && formData.officer && (
+          {formData.district && formData.officerName && formData.officerEmail && (
             <div>
               <p>Selected State: {formData.state}</p>
               <p>Selected District: {formData.district}</p>
-              <p>Selected Officer: {formData.officer}</p>
+              <p>Selected Officer: {formData.officerName}</p>
             </div>
           )}
           <ButtonComp name={"Assign Officer"} onClick={handleAssignOfficer} type={'submit'} disabled={!formData.district || !formData.officer} className={'font-bold py-3 px-4 rounded-md mt-2 cursor-pointe'} fullWidth />
         </div>
       </div>
+
       <div className='flex flex-col'>
-        <Typography variant='h3'>
-          Districts and Officers
-        </Typography>
+        <div className='flex justify-between items-center'>
+          <Typography variant='h3'>
+            Districts and Officers
+          </Typography>
+          <Link to={'/admin/manage-officers'}>
+            <ButtonComp name={"Manage Officers"} type={'button'} className={'font-bold py-3 px-4 rounded-md mt-2 cursor-pointe'} />
+          </Link>
+        </div>
         <div className="overflow-auto mt-4">
           <Card className="h-full w-full overflow-scroll">
             <table className="w-full min-w-max table-auto text-left">
@@ -219,12 +279,12 @@ export default function District_Officers() {
                               {editMode === district._id ? (
                                 <Input
                                   type="text"
-                                  value={editedDistrict.officer}
-                                  onChange={(e) => setEditedDistrict({ ...editedDistrict, officer: e.target.value })}
+                                  value={editedDistrict.officer[0].officerName} // Updated this line
+                                  onChange={(e) => setEditedDistrict({ ...editedDistrict, officer: [{ ...editedDistrict.officer[0], officerName: e.target.value }, editedDistrict.officer[1]] })}
                                 />
                               ) : (
                                 <Typography variant="body2" color="textPrimary" className="font-normal">
-                                  {district.officer}
+                                  {district.officer[0].officerName} {/* Updated this line */}
                                 </Typography>
                               )}
                             </td>
@@ -253,6 +313,7 @@ export default function District_Officers() {
                 ))}
               </tbody>
             </table>
+
           </Card>
         </div>
       </div>

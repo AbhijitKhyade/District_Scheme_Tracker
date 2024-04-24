@@ -1,5 +1,5 @@
 const express = require('express');
-const { officerNamesUpload, getAllOfficersNames, officerDistrict, officerDistrictData, officerDistrictDelete, officerDistrictEdit, governmentSchemes, allGovernmentSchemes, governmentSchemesDelete } = require('../controllers/admin.controller');
+const { officerNamesUpload, getAllOfficersNames, officerDistrict, officerDistrictData, officerDistrictDelete, officerDistrictEdit, governmentSchemes, allGovernmentSchemes, governmentSchemesDelete, addOfficer, deleteOfficer, editOfficer, getSingleOfficer } = require('../controllers/admin.controller');
 
 const router = express.Router();
 
@@ -10,6 +10,10 @@ router.post('/officer-district-relation', officerDistrict);
 router.get('/officer-district-data', officerDistrictData);
 router.delete('/officer-district-delete', officerDistrictDelete);
 router.put('/officer-district-edit', officerDistrictEdit);
+router.post('/add-officer', addOfficer);
+router.delete('/delete-officer', deleteOfficer);
+router.put('/edit-officer', editOfficer);
+router.get('/get-single-officer', getSingleOfficer);
 
 //Govt-Schemes
 router.post('/govt-schemes', governmentSchemes);

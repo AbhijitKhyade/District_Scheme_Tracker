@@ -1,12 +1,18 @@
 import React from "react";
 import {
   Button,
+  Typography,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import logo from '../assets/logo.webp';
 import ButtonComp from "./Button";
+import { useSelector } from "react-redux";
+import UserDropdown from "./UserDropdown";
+import { AppBar, Container } from "@material-tailwind/react";
+
 
 export default function NavbarList() {
+  const currentUser = useSelector((state) => state.user.currentUser);
   return (
     <div>
       <nav className=" block w-full rounded-xl border  border-white/80 bg-white bg-opacity-80 py-2 px-2 text-white shadow-md backdrop-blur-2xl backdrop-saturate-200 lg:px-2 lg:py-2">
@@ -26,16 +32,19 @@ export default function NavbarList() {
             >
               <span>District Schemes</span>
             </Link>
-            <Link
-              to={"/auth/login"}
-              className="w-full flex items-center justify-end"
-            >
-              <ButtonComp name={"Log In"} className={'h-9'} />
-            </Link>
-
+            {currentUser ? (
+              <UserDropdown />
+            ) : (
+              <Link
+                to={"/auth/login"}
+                className="w-full flex items-center justify-end"
+              >
+                <ButtonComp name={"Log In"} className={'h-9'} />
+              </Link>
+            )}
           </div>
         </div>
-      </nav>
-    </div>
+      </nav >
+    </div >
   )
 }

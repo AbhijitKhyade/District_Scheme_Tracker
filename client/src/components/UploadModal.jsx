@@ -7,9 +7,9 @@ import * as XLSX from 'xlsx';
 const UploadModal = ({ isOpen, onClose }) => {
     const [selectedFile, setSelectedFile] = useState(null);
 
-    const stopPropagation = (e) => {
-        e.stopPropagation();
-    };
+    // const stopPropagation = (e) => {
+    //     e.stopPropagation();
+    // };
 
     const handleFileChange = (e) => {
         setSelectedFile(e.target.files[0]);
@@ -27,7 +27,7 @@ const UploadModal = ({ isOpen, onClose }) => {
 
                     // Convert excelData to the desired format
                     const formattedData = Object.values(excelData);
-                    console.log('data to send:', formattedData);
+                    // console.log('data to send:', formattedData);
                     // Send the excelData to the backend
                     const response = await axios.post(`${BASE_URL}/admin/officers-uploads`, { data: formattedData });
                     console.log('Data uploaded successfully:', response.data);

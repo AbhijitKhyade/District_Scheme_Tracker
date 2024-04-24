@@ -4,6 +4,7 @@ import {
   Input,
   Button,
   Typography,
+  useSelect,
 } from "@material-tailwind/react";
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -12,15 +13,21 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BASE_URL } from '../../api';
 import ButtonComp from '../../components/Button';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInUserFailure, signInUserStart, signInUserSuccess } from '../../redux/userSlice';
 
 export default function Login() {
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+  const { loading } = useSelector((state) => state.user);
+
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
 
   const handleInputChange = (e) => {
@@ -63,7 +70,8 @@ export default function Login() {
           theme: "light",
         });
         return;
-      } else if (!formData.password) {
+      }
+      else if (!formData.password) {
         toast.warning("Please enter your password", {
           position: "top-left",
           autoClose: 1500,
@@ -76,19 +84,30 @@ export default function Login() {
         });
         return;
       }
+      dispatch(signInUserStart());
       const response = await axios.post(`${BASE_URL}/auth/login`, formData);
-      console.log(response.data);
+      // console.log(response.data.data);
+      toast.success(response?.data.message, {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      dispatch(signInUserSuccess(response.data.data));
 
       let pathLink = "";
-
-      // if (currentUser && currentUser.role === 0) {
-      //   pathLink = "/admin/dashboard";
-      // } else if (currentUser && currentUser.role === "") {
-      //   pathLink = "/officers/dashboard";
-      // } else if (currentUser && currentUser.role === "Citizen") {
-      //   pathLink = "/citizens/dashboard";
-      // }
-      // navigate(pathLink);
+      if (response.data.data && response.data.data.role === "Admin") {
+        pathLink = "/admin/dashboard";
+      } else if (response.data.data && response.data.data.role === "District Officer") {
+        pathLink = "/officers/dashboard";
+      } else if (response.data.data && response.data.data.role === "Citizen") {
+        pathLink = "/citizens/dashboard";
+      }
+      navigate(pathLink);
     } catch (error) {
       console.log('Error:', error?.response?.data?.message);
       toast.error(error?.response?.data?.message, {
@@ -101,6 +120,7 @@ export default function Login() {
         progress: undefined,
         theme: "light",
       });
+      dispatch(signInUserFailure(error.response.data.message));
     }
   }
 
@@ -163,7 +183,7 @@ export default function Login() {
             </div>
           </div>
 
-          <ButtonComp name={"Login"} type={'submit'} className={'mt-4 mb-2'} fullWidth />
+          <ButtonComp name={"Login"} type={'submit'} className={'mt-4 mb-2'} fullWidth loading={loading} />
 
           <div className="flex justify-between">
             <span className="text-gray-700 mt-2 text-sm">

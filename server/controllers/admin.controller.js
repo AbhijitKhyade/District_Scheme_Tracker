@@ -9,12 +9,18 @@ const mongoose = require('mongoose');
 // OFFICERS
 const officerNamesUpload = async (req, res) => {
     try {
-        const officerNamesArray = req.body.data.map(item => Object.values(item)[0]);
-        // console.log('Data received:', officerNamesArray);
-        // Process the data and save to database
-        await Officer.create({ names: officerNamesArray });
-        const responseData = null;
-        return ApiResponse(201, 'Officers Data uploaded successfully', responseData, res);
+        const officerData = req.body.data;
+        // console.log('Officer Data:', officerData)
+        if (!officerData || !Array.isArray(officerData)) {
+            return ApiResponse(400, 'Please provide an array of officer data', null, res);
+        }
+
+        await Promise.all(officerData.map(async (officer) => {
+            const { name, email } = officer;
+            await Officer.create({ officerName: name, officerEmail: email });
+        }));
+
+        return ApiResponse(201, 'Officers Data uploaded successfully', null, res);
     } catch (error) {
         return ApiError(500, error.message, error, res);
     }
@@ -23,7 +29,7 @@ const officerNamesUpload = async (req, res) => {
 const getAllOfficersNames = async (req, res) => {
     try {
         const officerData = await Officer.find();
-        return ApiResponse(200, 'Officers data fetched SUccessfully', officerData, res);
+        return ApiResponse(200, 'Officers data fetched Successfully', officerData, res);
     } catch (error) {
         return ApiError(500, error.message, error, res);
     }
@@ -31,17 +37,21 @@ const getAllOfficersNames = async (req, res) => {
 
 const officerDistrict = async (req, res) => {
     try {
-        const { state, district, officer } = req.body;
+        const { state, district, officerName, officerEmail, mapUrl } = req.body;
+        // console.log('req.body:', req.body);
         // Find if the state already exists
         let existingState = await DistrictOfficer.findOne({ "states.stateName": state });
-
+        let existingOfficer = await DistrictOfficer.findOne({ "states.districts.officer.officerEmail": officerEmail });
+        if (existingOfficer) {
+            return ApiResponse(400, 'Officer is already assigned to a district', null, res);
+        }
         if (!existingState) {
             // If the state doesn't exist, create a new entry
             existingState = new DistrictOfficer({
                 states: [
                     {
                         stateName: state,
-                        districts: [{ districtName: district, officer: officer }]
+                        districts: [{ districtName: district, officer: [{ officerName, officerEmail }], mapUrl: mapUrl }], // Include mapUrl here
                     }
                 ]
             });
@@ -50,10 +60,16 @@ const officerDistrict = async (req, res) => {
             const existingDistrict = existingState.states[0].districts.find(d => d.districtName === district);
             if (!existingDistrict) {
                 // If the district doesn't exist, add it to the existing state
-                existingState.states[0].districts.push({ districtName: district, officer: officer });
+                existingState.states[0].districts.push({ districtName: district, officer: [{ officerName, officerEmail }], mapUrl: mapUrl }); // Include mapUrl here
             } else {
-                // If the district already exists, update the officer
-                existingDistrict.officer = officer;
+                // If the district already exists, check if the officer is already assigned
+                const officerExists = existingDistrict.officer.some(o => o.officerName === officerName);
+                if (officerExists) {
+                    return ApiResponse(400, 'Officer is already assigned to this district', null, res);
+                } else {
+                    existingDistrict.officer = [{ officerName, officerEmail }];
+                    existingDistrict.mapUrl = mapUrl; // Include mapUrl here
+                }
             }
         }
 
@@ -64,6 +80,7 @@ const officerDistrict = async (req, res) => {
         return ApiError(500, error.message, error, res);
     }
 }
+
 
 const officerDistrictData = async (req, res) => {
     try {
@@ -79,8 +96,8 @@ const officerDistrictDelete = async (req, res) => {
         const districtId = req.query.id;
         const stateId = req.query.stateId;
 
-        console.log('districtId:', districtId);
-        console.log('stateId:', stateId);
+        // console.log('districtId:', districtId);
+        // console.log('stateId:', stateId);
 
         const data = await DistrictOfficer.findOneAndUpdate(
             { "states._id": stateId },
@@ -131,6 +148,63 @@ const officerDistrictEdit = async (req, res) => {
     }
 };
 
+const addOfficer = async (req, res) => {
+    try {
+        const { officerName, officerEmail } = req.body;
+        // console.log(req.body);
+        const existingOfficer = await Officer.findOne({ officerEmail });
+        if (existingOfficer) {
+            return ApiResponse(400, 'Officer already exists', null, res);
+        }
+        await Officer.create({ officerName, officerEmail });
+        return ApiResponse(201, 'Officer added successfully', null, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+}
+
+const deleteOfficer = async (req, res) => {
+    try {
+        const id = req.query.id;
+        await Officer.findByIdAndDelete(id);
+        return ApiResponse(200, 'Officer deleted Successfully', null, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+}
+
+const editOfficer = async (req, res) => {
+    try {
+        const { officerName, officerEmail } = req.body;
+        const id = req.query.id;
+        const existingOfficer = await Officer.findById(id);
+        if (!existingOfficer) {
+            return ApiResponse(404, 'Officer not found', null, res);
+        }
+        existingOfficer.officerName = officerName;
+        existingOfficer.officerEmail = officerEmail;
+        await existingOfficer.save();
+        return ApiResponse(200, 'Officer updated successfully', null, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+}
+
+const getSingleOfficer = async (req, res) => {
+    try {
+        const officerEmail = req.query.email;
+        // console.log('officerEmail:', officerEmail);
+        const officer = await DistrictOfficer.findOne({ "states.districts.officer.officerEmail": officerEmail });
+        if (!officer) {
+            return ApiResponse(404, 'Officer not found', null, res);
+        }
+
+        return ApiResponse(200, 'Officer Data', officer, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+}
+
 // GOVT SCHEMES
 const governmentSchemes = async (req, res) => {
     try {
@@ -165,8 +239,9 @@ const governmentSchemesDelete = async (req, res) => {
 
 
 
+
 module.exports = {
     officerNamesUpload, getAllOfficersNames, officerDistrict, officerDistrictData
     , officerDistrictDelete, officerDistrictEdit, governmentSchemes, allGovernmentSchemes,
-    governmentSchemesDelete
+    governmentSchemesDelete, addOfficer, deleteOfficer, editOfficer, getSingleOfficer
 };
