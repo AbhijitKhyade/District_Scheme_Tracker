@@ -4,6 +4,16 @@ import { useSelector } from 'react-redux';
 import { BASE_URL } from '../../api';
 import { Typography } from '@material-tailwind/react';
 
+let districtValue = '';
+
+export const setDistrict = (value) => {
+  districtValue = value;
+};
+
+export const getDistrict = () => {
+  return districtValue;
+};
+
 export default function OfficersDashboard() {
   const currentUser = useSelector((state) => state.user.currentUser);
   const [district, setDistrict] = useState('');
@@ -13,10 +23,10 @@ export default function OfficersDashboard() {
   const getOfficerDistrict = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/admin/get-single-officer?email=${currentUser.email}`);
-      // console.log('response:', response.data.data);
-      setDistrict(response.data.data.states[0].districts[0].districtName);
-      setMapUrl(response.data.data.states[0].districts[0].mapUrl);
-      setState(response.data.data.states[0].stateName);
+      console.log('response:', response.data.data);
+      setDistrict(response.data.data[0].district);
+      setMapUrl(response.data.data[0].mapUrl);
+      setState(response.data.data[0].state);
     } catch (error) {
       console.log('error:', error);
     }
@@ -25,7 +35,7 @@ export default function OfficersDashboard() {
   useEffect(() => {
     getOfficerDistrict();
   }, []);
-
+  districtValue = district;
   return (
     <div className='m-2 px-4'>
       <Typography variant='h3' className='mb-4 text-center'>Welcome to <span className='text-red-400'>{state}</span> State </Typography>
@@ -33,6 +43,7 @@ export default function OfficersDashboard() {
       <div className='flex justify-center shadow-md'>
         <img src={mapUrl} alt={district} className='object-cover' />
       </div>
+
     </div>
   )
 }

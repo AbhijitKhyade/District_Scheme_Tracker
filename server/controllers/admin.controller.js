@@ -1,5 +1,6 @@
 const DistrictOfficer = require('../models/district-officer.model');
 const Officer = require('../models/officers.model');
+const SchemeMonitoring = require('../models/scheme-monitor.model');
 const Schemes = require('../models/scheme.model');
 const ApiError = require('../utils/ApiError');
 const ApiResponse = require('../utils/ApiResponse');
@@ -193,17 +194,39 @@ const editOfficer = async (req, res) => {
 const getSingleOfficer = async (req, res) => {
     try {
         const officerEmail = req.query.email;
-        // console.log('officerEmail:', officerEmail);
         const officer = await DistrictOfficer.findOne({ "states.districts.officer.officerEmail": officerEmail });
+
         if (!officer) {
             return ApiResponse(404, 'Officer not found', null, res);
         }
 
-        return ApiResponse(200, 'Officer Data', officer, res);
+        let officerData = [];
+
+        officer.states.forEach(state => {
+            state.districts.forEach(district => {
+                district.officer.forEach(officer => {
+                    if (officer.officerEmail === officerEmail) {
+                        officerData.push({
+                            state: state.stateName,
+                            district: district.districtName,
+                            mapUrl: district.mapUrl
+                        });
+                    }
+                });
+            });
+        });
+
+        if (officerData.length === 0) {
+            return ApiResponse(404, 'District not found for the officer', null, res);
+        }
+
+        return ApiResponse(200, 'Officer Data', officerData, res);
     } catch (error) {
         return ApiError(500, error.message, error, res);
     }
 }
+
+
 
 // GOVT SCHEMES
 const governmentSchemes = async (req, res) => {
@@ -236,6 +259,68 @@ const governmentSchemesDelete = async (req, res) => {
     }
 }
 
+const getSingleScheme = async (req, res) => {
+    try {
+        const schemeName = req.query.name;
+        const scheme = await Schemes.find({ govt_scheme: schemeName });
+        if (!scheme) {
+            return ApiResponse(404, 'Scheme not found', null, res);
+        }
+        // console.log(scheme[0].parameters);
+        return ApiResponse(200, 'Scheme Data', scheme[0].parameters, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+}
+
+const addSchemeMonitoring = async (req, res) => {
+    try {
+        const { govt_scheme, district, parameters } = req.body;
+        let existingScheme = await SchemeMonitoring.findOne({ govt_scheme, district });
+
+        if (existingScheme) {
+            // If scheme monitoring already exists, update parameters
+            parameters.forEach(({ name, value }) => {
+                const existingParameter = existingScheme.parameters.find(param => param.name === name);
+                if (existingParameter) {
+                    if (!Array.isArray(existingParameter.value)) {
+                        existingParameter.value = [existingParameter.value];
+                    }
+                    existingParameter.value.push(value);
+                } else {
+                    existingScheme.parameters.push({ name, value: [value] });
+                }
+            });
+            await existingScheme.save();
+            return ApiResponse(200, 'Parameters updated in Scheme Monitoring successfully', null, res);
+        }
+
+        await SchemeMonitoring.create({ govt_scheme, district, parameters });
+        return ApiResponse(201, 'Scheme Monitoring added successfully', null, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+};
+
+
+// SCHEME MONITORING
+const getSingleSchemeMonitoring = async (req, res) => {
+    try {
+        const { name, district } = req.query;
+        // console.log('name, district:', name, district)
+        const schemeMonitoring = await SchemeMonitoring.findOne({ govt_scheme: name, district });
+        if (!schemeMonitoring) {
+            return ApiResponse(400, 'Scheme Monitoring not found', null, res);
+        }
+        return ApiResponse(200, 'Scheme Monitoring Data', schemeMonitoring, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+
+}
+
+
+
 
 
 
@@ -243,5 +328,6 @@ const governmentSchemesDelete = async (req, res) => {
 module.exports = {
     officerNamesUpload, getAllOfficersNames, officerDistrict, officerDistrictData
     , officerDistrictDelete, officerDistrictEdit, governmentSchemes, allGovernmentSchemes,
-    governmentSchemesDelete, addOfficer, deleteOfficer, editOfficer, getSingleOfficer
+    governmentSchemesDelete, addOfficer, deleteOfficer, editOfficer, getSingleOfficer, getSingleScheme,
+    addSchemeMonitoring, getSingleSchemeMonitoring
 };

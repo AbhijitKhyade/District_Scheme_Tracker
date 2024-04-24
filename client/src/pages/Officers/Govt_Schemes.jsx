@@ -16,9 +16,13 @@ export default function Govt_Schemes() {
     }
   }
 
+  
   useEffect(() => {
     getSchemes();
   }, []);
+
+
+
   return (
     <div className='m-2 px-4'>
       <Typography variant='h3' size='xl'>Government Schemes</Typography>
@@ -26,30 +30,31 @@ export default function Govt_Schemes() {
         {schemes?.map((scheme, index) => (
           <Card key={index} className='border border-gray-300 w-full rounded-sm'>
             <div className='overflow-x-auto'>
-              <div className='flex items-center justify-between border-gray-200 px-3 py-1'>
+              <div className='flex items-center justify-between border-gray-200 px-4 py-2'>
                 <div className='flex flex-col justify-start'>
                   <div className='flex items-center gap-2'>
-                    <Typography variant='h5' size='md' className='text-black'>Scheme Name:</Typography><span className='text-blue-400'>{scheme.govt_scheme}</span>
+                    <Typography variant='h5' size='md' className='text-black'>Scheme Name:</Typography><span className='text-blue-400 font-semibold text-xl'>{scheme.govt_scheme}</span>
                   </div>
-                  <div className='flex items-center gap-2'>
-                    <Typography variant='h5' size='md' className='text-black'>Scheme Objective:</Typography><span className='text-gray-600'>{scheme.objective}</span>
-                  </div>
-                  <div className='flex flex-col gap-1'>
-                    <Typography variant='h5' size='md' className='text-black'>Scheme Description:</Typography>
+                  <div className='flex flex-col gap-2'>
+                    <Typography variant='h5' size='md' className='text-black'>Scheme Objective:</Typography>
                     <ul className='list-disc list-inside text-gray-600'>
-                      {scheme.description.split(/[\.\n]+/).map((item, i) => (
+                      {scheme.objective.split(/[\.\n]+/).map((item, i) => (
                         <li key={i}>{item}</li>
                       ))}
                     </ul>
                   </div>
                   <div className='flex flex-col gap-1'>
+                    <Typography variant='h5' size='md' className='text-black'>Scheme Description:</Typography><span className='text-gray-600'>{scheme.description}</span>
+                  </div>
+                  <div className='flex flex-col gap-1'>
                     <Typography variant='h5' size='md' className='text-black'>Scheme Parameters:</Typography>
-                    <ul className='list-disc list-inside text-gray-600'>
+                    <ul className='list-disc list-inside text-gray-600 text-justify'>
                       {scheme.parameters.split(/[\.\n]+/).map((item, i) => (
                         <li key={i}>{item}</li>
                       ))}
                     </ul>
                   </div>
+
 
                 </div>
               </div>
@@ -57,6 +62,7 @@ export default function Govt_Schemes() {
           </Card>
         ))}
       </div>
+
     </div>
   )
 }

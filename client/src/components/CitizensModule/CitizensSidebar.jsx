@@ -9,6 +9,7 @@ import {
   ListItem,
   ListItemPrefix,
 } from "@material-tailwind/react";
+import { useSelector } from 'react-redux';
 
 const links = [
   {
@@ -28,7 +29,7 @@ const links = [
 ];
 
 export default function CitizensSidebar() {
-  // const { currentUser } = useSelector((state) => state.user);
+  const currentUser = useSelector((state) => state.user.currentUser);
   const activeLink =
     "flex items-center gap-3 pl-2 pt-3 pb-2.5 rounded-lg text-white text-md m-2 w-full ";
   const normalLink =
@@ -44,12 +45,12 @@ export default function CitizensSidebar() {
             className="flex justify-start items-center gap-2"
           >
             <div className="rounded-full bg-gray-400 p-3 w-10 h-10 flex items-center justify-center text-dark font-bold">
-              {/* {currentUser.Name ? currentUser.Name[0] : "A"} */}
-              A
+              {currentUser.name ? currentUser.name[0] : "A"}
+
             </div>
             <div>
-              <p className="font-semibold"> Rahul Desai  </p>
-              <p className="text-xs font-normal"> rahul@gmail.com  </p>
+              <p className="font-semibold"> {currentUser.name}  </p>
+              <p className="text-xs font-normal"> {currentUser.email} </p>
             </div>
           </Typography>
         </div>

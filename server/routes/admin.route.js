@@ -1,5 +1,5 @@
 const express = require('express');
-const { officerNamesUpload, getAllOfficersNames, officerDistrict, officerDistrictData, officerDistrictDelete, officerDistrictEdit, governmentSchemes, allGovernmentSchemes, governmentSchemesDelete, addOfficer, deleteOfficer, editOfficer, getSingleOfficer } = require('../controllers/admin.controller');
+const { officerNamesUpload, getAllOfficersNames, officerDistrict, officerDistrictData, officerDistrictDelete, officerDistrictEdit, governmentSchemes, allGovernmentSchemes, governmentSchemesDelete, addOfficer, deleteOfficer, editOfficer, getSingleOfficer, getSingleScheme, addSchemeMonitoring, getSingleSchemeMonitoring } = require('../controllers/admin.controller');
 
 const router = express.Router();
 
@@ -18,6 +18,11 @@ router.get('/get-single-officer', getSingleOfficer);
 //Govt-Schemes
 router.post('/govt-schemes', governmentSchemes);
 router.get('/all-govt-schemes', allGovernmentSchemes);
+router.get('/get-single-scheme', getSingleScheme);
 router.delete('/delete-govt-scheme', governmentSchemesDelete);
+router.post('/add-scheme-monitoring', addSchemeMonitoring);
+
+// SCHEME MONITORING
+router.get('/get-single-scheme-monitoring', getSingleSchemeMonitoring);
 
 module.exports = router;

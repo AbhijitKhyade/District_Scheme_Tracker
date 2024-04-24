@@ -9,6 +9,7 @@ import {
 } from "@material-tailwind/react";
 import { MdDashboard, MdRateReview } from 'react-icons/md';
 import { BiSolidPieChartAlt2 } from 'react-icons/bi';
+import { useSelector } from 'react-redux';
 
 const links = [
   {
@@ -33,7 +34,7 @@ const links = [
 ];
 
 export default function OfficersSidebar() {
-  // const { currentUser } = useSelector((state) => state.user);
+  const currentUser = useSelector((state) => state.user.currentUser);
   const activeLink =
     "flex items-center gap-3 pl-2 pt-3 pb-2.5 rounded-lg text-white text-md m-2 w-full bg-blue-gray-800 dark:bg-blue-gray-800 dark:hover:text-black";
   const normalLink =
@@ -49,17 +50,17 @@ export default function OfficersSidebar() {
             className="flex justify-start items-center gap-2"
           >
             <div className="rounded-full bg-gray-400 p-3 w-10 h-10 flex items-center justify-center text-dark font-bold">
-              {/* {currentUser.Name ? currentUser.Name[0] : "A"} */}
-              A
+              {currentUser.name ? currentUser.name[0] : "A"}
+
             </div>
             <div>
-              <p className="font-semibold"> Abhishek  </p>
-              <p className="text-xs font-normal"> abhishek@gmail.com  </p>
+              <p className="font-semibold"> {currentUser?.name}  </p>
+              <p className="text-xs font-normal">{currentUser.email}  </p>
             </div>
           </Typography>
         </div>
         <div>
-          <List className="mt-2 p-4">
+          <List className="mt-2 p-4" >
             {links.map((item) => (
               <div key={item.title}>
                 {item.links.map((link) => (

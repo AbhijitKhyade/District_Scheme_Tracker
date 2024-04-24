@@ -1,6 +1,7 @@
 import CitizensDashbord from "../components/CitizensModule/CitizensDashbord";
 import CitizensLayout from "../layouts/CitizensLayout";
 import Govt_Schemes from "../pages/Citizens/Govt_Schemes";
+import SchemeProgress from "../pages/Citizens/SchemeProgress";
 
 export const CitizensRoutes = {
     path: "citizens/",
@@ -13,6 +14,10 @@ export const CitizensRoutes = {
         {
             path: "govt-schemes",
             element: <Govt_Schemes />
+        },
+        {
+            path: "scheme-progress",
+            element: <SchemeProgress />
         },
     ]
 }

@@ -40,6 +40,7 @@ export default function GovtSchemes() {
         description: "",
         parameters: ""
       })
+      allGovtSchemes();
     } catch (error) {
       console.log('Error:', error);
     }
@@ -65,7 +66,8 @@ export default function GovtSchemes() {
 
   const handleDeleteScheme = async () => {
     try {
-      const response = await axios.delete(`${BASE_URL}/admin/delete-govt-scheme?id=${scheme_id}`);
+
+      const response = await axios.delete(`${BASE_URL}/admin/delete-govt-scheme?id=${schemeId}`);
       console.log(response.data.data);
       allGovtSchemes();
     } catch (error) {
@@ -159,7 +161,7 @@ export default function GovtSchemes() {
                   <MdDelete className="text-red-600 hover:text-red-900 w-5 h-5 cursor-pointer"
                     onClick={() => {
                       setDeleteDialogOpen(true);
-                      setSchemeId(scheme_id);
+                      setSchemeId(scheme._id);
                     }}
                   />
                 </div>
