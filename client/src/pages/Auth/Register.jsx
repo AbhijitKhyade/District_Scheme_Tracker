@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BASE_URL } from '../../api';
 import ButtonComp from '../../components/Button';
+import { states_districts } from '../../data';
 
 export default function Register() {
 
@@ -22,11 +23,16 @@ export default function Register() {
     email: "",
     password: "",
     role: "",
+    state: "Maharashtra",
+    district: "",
   });
   const [citizen, setCitizen] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
+
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -138,14 +144,15 @@ export default function Register() {
     }
   }
 
+  const districtOptions = states_districts.find(state => state.state === formData.state).districts;
   return (
     <div
-      className="flex justify-center items-center h-[100vh] "
+      className="flex justify-center items-center h-[100vh]"
     >
       <Card
         color="transparent"
         shadow={true}
-        className="border bg-white border-gray-300 w-5/6 sm:w-1/2 md:w-1/3 lg:w-1/4 mb-12 p-6 rounded-md flex flex-col justify-between h-auto"
+        className="border bg-white border-gray-300 w-5/6 sm:w-1/2 md:w-1/3 lg:w-1/4 mb-2 mt-10 p-6 rounded-md flex flex-col justify-between h-auto"
       >
         <Typography
           variant="h4"
@@ -239,6 +246,43 @@ export default function Register() {
             </>
           ) : (
             <>
+              <div className="mb-4 flex justify-between items-center">
+                <div className="w-full">
+                  <div className="flex justify-between">
+                    <Typography variant="h6" color="blue-gray">
+                      District
+                    </Typography>
+                  </div>
+                  <Input
+                    size="lg"
+                    name="district"
+                    value={formData.district}
+                    placeholder="Pune"
+                    label='District'
+                    onChange={handleInputChange}
+                  />
+                  {/* <Select
+                    label='District'
+                    size="lg"
+                    name='district'
+                    onChange={(value) =>
+                      handleInputChange({
+                        target: { name: "district", value },
+                      })
+                    }
+                    className='bg-black'
+                  >
+                    <Option value="" disabled>Select District</Option>
+                    {districtOptions.map((district) => {
+                      return (
+                        <Option value={district} key={district} >{district}</Option>
+                      )
+                    })}
+                  </Select> */}
+
+
+                </div>
+              </div>
               <ButtonComp name={"Register"} type={'submit'} className={'mt-4 mb-2'} fullWidth loading={loading} />
             </>
           )}

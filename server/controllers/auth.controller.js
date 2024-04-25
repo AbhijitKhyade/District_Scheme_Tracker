@@ -6,7 +6,7 @@ const { hashPassword, comparePassword } = require('../utils/passwords');
 const generateToken = require('../utils/generateToken');
 
 const registerController = async (req, res) => {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, district } = req.body;
     try {
         const user = await User.findOne({ email });
         if (user) {
@@ -14,7 +14,7 @@ const registerController = async (req, res) => {
         }
 
         const hashedPassword = await hashPassword(password);
-        const newUser = await User.create({ name, email, password: hashedPassword, role: role });
+        const newUser = await User.create({ name, email, password: hashedPassword, role: role, district });
 
         return ApiResponse(201, 'User created successfully', data = null, res);
     } catch (error) {
@@ -35,7 +35,7 @@ const loginController = async (req, res) => {
             return ApiError(400, 'Incorrect Password', null, res);
         }
         const token = await generateToken(existingUser);
-        const user = { id: existingUser.id, name: existingUser.name, email: existingUser.email, role: existingUser.role, token };
+        const user = { id: existingUser.id, name: existingUser.name, email: existingUser.email, role: existingUser.role, district: existingUser.district, token };
         return ApiResponse(200, 'Login successful', data = user, res);
     } catch (error) {
         console.log('Server Error: ', error.message);

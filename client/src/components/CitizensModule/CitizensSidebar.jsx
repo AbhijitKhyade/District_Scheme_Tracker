@@ -1,6 +1,7 @@
 import React from 'react'
 import { BiSolidPieChartAlt2 } from 'react-icons/bi';
 import { MdDashboard } from 'react-icons/md';
+import { GiProgression } from "react-icons/gi";
 import { Link } from "react-router-dom";
 
 import {
@@ -23,6 +24,11 @@ const links = [
         name: "Govt Schemes",
         path: "govt-schemes",
         icon: <BiSolidPieChartAlt2 className="h-5 w-5" />,
+      },
+      {
+        name: "Schemes Progress",
+        path: "schemes-summary",
+        icon: <GiProgression className="h-5 w-5" />,
       },
     ],
   },

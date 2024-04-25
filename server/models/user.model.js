@@ -20,6 +20,9 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
+    district: {
+        type: String,
+    },
 });
 
 module.exports = mongoose.model('User', UserSchema);

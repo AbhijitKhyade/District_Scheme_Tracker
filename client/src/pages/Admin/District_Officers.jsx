@@ -8,7 +8,7 @@ import {
 import { MdDelete, MdCloudUpload, MdManageAccounts, MdSave } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import ButtonComp from '../../components/Button';
-import { states_districts } from '../../data';
+import { districtMaps, states_districts } from '../../data';
 import UploadModal from '../../components/UploadModal';
 import axios from 'axios';
 import { BASE_URL } from '../../api';
@@ -175,13 +175,14 @@ export default function District_Officers() {
           </div>
           <div className="w-1/2 sm:w-full">
             <Typography variant='h5'>Map Url</Typography>
-            <Input
-              type="text"
-              value={formData.mapUrl}
-              onChange={(e) => setFormData({ ...formData, mapUrl: e.target.value })}
-              placeholder="Enter Map Url"
-              className="w-full"
-              label='Map Url'
+            <Select
+              options={Object.keys(districtMaps).map(map =>
+                ({ value: districtMaps[map], label: map }))}
+              name="mapUrl"
+              onChange={(value) => handleInputChange(value, { name: "mapUrl" })}
+              placeholder="Select Map"
+              classNamePrefix="select"
+              isDisabled={!formData.state || !formData.district}
             />
           </div>
         </div>
@@ -203,7 +204,7 @@ export default function District_Officers() {
               options={officersEmail?.map(officer => ({ value: officer, label: officer }))}
               name='officerEmail'
               onChange={(value) => handleInputChange(value, { name: "officerEmail" })}
-              isDisabled={!formData.state || !formData.district}
+              isDisabled={!formData.district || !formData.officerName}
               placeholder="Select Officer Email"
               classNamePrefix="select"
             />

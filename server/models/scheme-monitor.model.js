@@ -23,7 +23,21 @@ const SchemeMonitoringSchema = new Schema({
     lastUpdated: {
         type: Date,
         default: Date.now
+    },
+    percentageProgress: {
+        type: Number,
+        default: 0
     }
+});
+
+
+// Calculate percentage progress before saving
+SchemeMonitoringSchema.pre('save', function (next) {
+    const totalParameters = this.parameters.length;
+    const totalValues = this.parameters.reduce((acc, param) => acc + Math.min(param.value.length, 12), 0);
+    const totalValuesExpected = totalParameters * 12;
+    this.percentageProgress = ((totalValues / totalValuesExpected) * 100).toFixed(2);
+    next();
 });
 
 
