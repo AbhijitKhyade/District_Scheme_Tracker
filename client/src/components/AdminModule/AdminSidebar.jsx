@@ -35,8 +35,8 @@ const links = [
         icon: <BiSolidPieChartAlt2 className="h-5 w-5" />,
       },
       {
-        name: "District Monitoring",
-        path: "district-monitoring",
+        name: "Scheme Progress",
+        path: "scheme-progress",
         icon: <MdRateReview className="h-5 w-5" />,
       },
       // {

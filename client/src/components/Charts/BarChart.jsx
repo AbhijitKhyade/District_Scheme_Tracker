@@ -1,7 +1,7 @@
 import React from 'react'
 import { Bar } from 'react-chartjs-2';
 
-export default function BarChart({ labels, data, title }) {
+export default function BarChart({ labels, data, title, yAxisMax }) {
     const chartData = {
         labels: labels,
         datasets: [
@@ -49,7 +49,7 @@ export default function BarChart({ labels, data, title }) {
         scales: {
             y: {
                 suggestedMin: 0, // Minimum value for the y-axis
-                suggestedMax: Math.max(...data) + 500, // Maximum value for the y-axis
+                suggestedMax: yAxisMax ||Math.max(...data) + 500, // Maximum value for the y-axis
             },
         },
         maintainAspectRatio: false,

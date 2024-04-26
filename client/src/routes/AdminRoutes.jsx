@@ -3,9 +3,10 @@ import AdminDashboard from '../components/AdminModule/AdminDashboard'
 import AdminLayout from '../layouts/AdminLayout'
 import District_Officers from '../pages/Admin/District_Officers'
 import Govt_Schemes from '../pages/Admin/Govt_Schemes'
-import District_Monitoring from '../pages/Admin/District_Monitoring'
 import Reports from '../pages/Admin/Reports'
 import Manage_Officers from '../pages/Admin/Manage_Officers'
+import Scheme_Tracking from '../pages/Admin/Scheme_Tracking'
+import SingleSchemeDetails from '../pages/Admin/SingleSchemeDetails'
 
 export const AdminRoutes = {
     path: "admin/",
@@ -24,8 +25,8 @@ export const AdminRoutes = {
             element: <Govt_Schemes />
         },
         {
-            path: "district-monitoring",
-            element: <District_Monitoring />
+            path: "scheme-progress",
+            element: <Scheme_Tracking />
         },
         {
             path: "reports",
@@ -35,6 +36,10 @@ export const AdminRoutes = {
             path: "manage-officers",
             element: <Manage_Officers />
         },
+        {
+            path: "single-scheme-details",
+            element: <SingleSchemeDetails />
+        }
     ]
 
 }

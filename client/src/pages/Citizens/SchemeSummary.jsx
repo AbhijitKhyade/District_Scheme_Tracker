@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { Chart as ChartJs, defaults } from 'chart.js/auto';
 import { BASE_URL } from '../../api';
 import PieChart from '../../components/Charts/PieChart';
+import BarChart from '../../components/Charts/BarChart';
 
 defaults.maintainAspectRatio = false;
 defaults.responsive = true;
@@ -38,7 +39,7 @@ export default function SchemeSummary() {
     const data = schemeProgress.map(scheme => parseFloat(scheme.percentageProgress));
     const title = "Scheme Progress";
 
-    return <PieChart labels={labels} data={data} title={title} />;
+    return <BarChart labels={labels} data={data} title={title}  yAxisMax={100}/>;
   };
 
   return (

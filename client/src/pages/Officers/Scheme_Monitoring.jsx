@@ -13,7 +13,8 @@ export default function Scheme_Monitoring() {
   const [formData, setFormData] = useState({
     govt_scheme: '',
     district: district,
-    parameters: []
+    parameters: [],
+    state: "Maharashtra",
   });
   const navigate = useNavigate();
 

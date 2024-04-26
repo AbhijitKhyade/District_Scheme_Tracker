@@ -273,10 +273,15 @@ const getSingleScheme = async (req, res) => {
     }
 }
 
+
+
+
+// SCHEME MONITORING
+
 const addSchemeMonitoring = async (req, res) => {
     try {
-        const { govt_scheme, district, parameters } = req.body;
-        let existingScheme = await SchemeMonitoring.findOne({ govt_scheme, district });
+        const { govt_scheme, district, parameters, state } = req.body;
+        let existingScheme = await SchemeMonitoring.findOne({ govt_scheme, district, state });
 
         if (existingScheme) {
             // If scheme monitoring already exists, update parameters
@@ -295,15 +300,12 @@ const addSchemeMonitoring = async (req, res) => {
             return ApiResponse(200, 'Parameters updated in Scheme Monitoring successfully', null, res);
         }
 
-        await SchemeMonitoring.create({ govt_scheme, district, parameters });
+        await SchemeMonitoring.create({ govt_scheme, district, parameters, state });
         return ApiResponse(201, 'Scheme Monitoring added successfully', null, res);
     } catch (error) {
         return ApiError(500, error.message, error, res);
     }
 };
-
-
-// SCHEME MONITORING
 const getSingleSchemeMonitoring = async (req, res) => {
     try {
         const { name, district } = req.query;
@@ -332,6 +334,20 @@ const getSingleDistrictScheme = async (req, res) => {
     }
 }
 
+const getSingleStateProgress = async (req, res) => {
+    try {
+        const { state, district } = req.query;
+        const stateProgress = await SchemeMonitoring.find({ state, district });
+        if (!stateProgress) {
+            return ApiResponse(400, 'State Progress not found', null, res);
+        }
+        // console.log(stateProgress);
+        return ApiResponse(200, 'State Progress Data', stateProgress, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+}
+
 
 
 
@@ -342,5 +358,5 @@ module.exports = {
     officerNamesUpload, getAllOfficersNames, officerDistrict, officerDistrictData
     , officerDistrictDelete, officerDistrictEdit, governmentSchemes, allGovernmentSchemes,
     governmentSchemesDelete, addOfficer, deleteOfficer, editOfficer, getSingleOfficer, getSingleScheme,
-    addSchemeMonitoring, getSingleSchemeMonitoring, getSingleDistrictScheme
+    addSchemeMonitoring, getSingleSchemeMonitoring, getSingleDistrictScheme, getSingleStateProgress
 };

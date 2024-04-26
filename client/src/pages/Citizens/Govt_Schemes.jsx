@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { BASE_URL } from '../../api';
 import { Link } from 'react-router-dom';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 
 
 export default function Govt_Schemes() {
@@ -37,6 +38,9 @@ export default function Govt_Schemes() {
                   <div className='flex flex-col justify-start'>
                     <div className='flex items-center gap-2'>
                       <Typography variant='h5' size='md' className='text-black'>Scheme Name:</Typography><span className='text-blue-400 font-semibold text-xl'>{scheme.govt_scheme}</span>
+                      <div>
+                        <p><FaExternalLinkAlt /></p>
+                      </div>
                     </div>
                     <div className='flex flex-col gap-2'>
                       <Typography variant='h5' size='md' className='text-black'>Scheme Objective:</Typography>
