@@ -39,20 +39,22 @@ const getAllOfficersNames = async (req, res) => {
 const officerDistrict = async (req, res) => {
     try {
         const { state, district, officerName, officerEmail, mapUrl } = req.body;
-        // console.log('req.body:', req.body);
-        // Find if the state already exists
-        let existingState = await DistrictOfficer.findOne({ "states.stateName": state });
-        let existingOfficer = await DistrictOfficer.findOne({ "states.districts.officer.officerEmail": officerEmail });
+
+        // Check if officer with the provided email is already assigned to any district
+        const existingOfficer = await DistrictOfficer.findOne({ "states.districts.officer.officerEmail": officerEmail });
         if (existingOfficer) {
             return ApiResponse(400, 'Officer is already assigned to a district', null, res);
         }
+
+        // Find if the state already exists
+        let existingState = await DistrictOfficer.findOne({ "states.stateName": state });
         if (!existingState) {
             // If the state doesn't exist, create a new entry
             existingState = new DistrictOfficer({
                 states: [
                     {
                         stateName: state,
-                        districts: [{ districtName: district, officer: [{ officerName, officerEmail }], mapUrl: mapUrl }], // Include mapUrl here
+                        districts: [{ districtName: district, officer: [{ officerName, officerEmail }], mapUrl: mapUrl }]
                     }
                 ]
             });
@@ -61,15 +63,14 @@ const officerDistrict = async (req, res) => {
             const existingDistrict = existingState.states[0].districts.find(d => d.districtName === district);
             if (!existingDistrict) {
                 // If the district doesn't exist, add it to the existing state
-                existingState.states[0].districts.push({ districtName: district, officer: [{ officerName, officerEmail }], mapUrl: mapUrl }); // Include mapUrl here
+                existingState.states[0].districts.push({ districtName: district, officer: [{ officerName, officerEmail }], mapUrl: mapUrl });
             } else {
-                // If the district already exists, check if the officer is already assigned
-                const officerExists = existingDistrict.officer.some(o => o.officerName === officerName);
-                if (officerExists) {
-                    return ApiResponse(400, 'Officer is already assigned to this district', null, res);
+                // If the district already exists, check if it has an officer assigned
+                if (existingDistrict.officer.length > 0) {
+                    return ApiResponse(400, 'District already has an officer assigned', null, res);
                 } else {
-                    existingDistrict.officer = [{ officerName, officerEmail }];
-                    existingDistrict.mapUrl = mapUrl; // Include mapUrl here
+                    existingDistrict.officer.push({ officerName, officerEmail });
+                    existingDistrict.mapUrl = mapUrl;
                 }
             }
         }
@@ -80,8 +81,7 @@ const officerDistrict = async (req, res) => {
     } catch (error) {
         return ApiError(500, error.message, error, res);
     }
-}
-
+};
 
 const officerDistrictData = async (req, res) => {
     try {
@@ -90,7 +90,7 @@ const officerDistrictData = async (req, res) => {
     } catch (error) {
         return ApiError(500, error.message, error, res);
     }
-}
+};
 
 const officerDistrictDelete = async (req, res) => {
     try {
@@ -117,7 +117,7 @@ const officerDistrictDelete = async (req, res) => {
     } catch (error) {
         return ApiError(500, error.message, error, res);
     }
-}
+};
 
 const officerDistrictEdit = async (req, res) => {
     try {
@@ -162,7 +162,7 @@ const addOfficer = async (req, res) => {
     } catch (error) {
         return ApiError(500, error.message, error, res);
     }
-}
+};
 
 const deleteOfficer = async (req, res) => {
     try {
@@ -172,7 +172,7 @@ const deleteOfficer = async (req, res) => {
     } catch (error) {
         return ApiError(500, error.message, error, res);
     }
-}
+};
 
 const editOfficer = async (req, res) => {
     try {
@@ -189,7 +189,7 @@ const editOfficer = async (req, res) => {
     } catch (error) {
         return ApiError(500, error.message, error, res);
     }
-}
+};
 
 const getSingleOfficer = async (req, res) => {
     try {
@@ -224,8 +224,7 @@ const getSingleOfficer = async (req, res) => {
     } catch (error) {
         return ApiError(500, error.message, error, res);
     }
-}
-
+};
 
 
 // GOVT SCHEMES
@@ -246,7 +245,7 @@ const allGovernmentSchemes = async (req, res) => {
     } catch (error) {
         return ApiError(500, error.message, error, res);
     }
-}
+};
 
 const governmentSchemesDelete = async (req, res) => {
     try {
@@ -257,7 +256,7 @@ const governmentSchemesDelete = async (req, res) => {
     } catch (error) {
         return ApiError(500, error.message, error, res);
     }
-}
+};
 
 const getSingleScheme = async (req, res) => {
     try {
@@ -271,13 +270,45 @@ const getSingleScheme = async (req, res) => {
     } catch (error) {
         return ApiError(500, error.message, error, res);
     }
-}
+};
 
+const getSingleSchemeDetails = async (req, res) => {
+    try {
+        const schemeName = req.query.name;
+        const scheme = await Schemes.findOne({ govt_scheme: schemeName });
+        if (!scheme) {
+            return ApiResponse(404, 'Scheme not found', null, res);
+        }
+        return ApiResponse(200, 'Scheme Data', scheme, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+};
 
+const editGovernmentSchemes = async (req, res) => {
+    try {
+        const { scheme, objective, description, parameters } = req.body;
+        const name = req.query.name;
+
+        const existingScheme = await Schemes.findOne({ govt_scheme: name });
+        if (!existingScheme) {
+            return ApiResponse(404, 'Scheme not found', null, res);
+        }
+
+        existingScheme.govt_scheme = scheme;
+        existingScheme.objective = objective;
+        existingScheme.description = description;
+        existingScheme.parameters = parameters;
+
+        await existingScheme.save();
+        return ApiResponse(200, 'Scheme Updated Successfully', null, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+};
 
 
 // SCHEME MONITORING
-
 const addSchemeMonitoring = async (req, res) => {
     try {
         const { govt_scheme, district, parameters, state } = req.body;
@@ -306,6 +337,7 @@ const addSchemeMonitoring = async (req, res) => {
         return ApiError(500, error.message, error, res);
     }
 };
+
 const getSingleSchemeMonitoring = async (req, res) => {
     try {
         const { name, district } = req.query;
@@ -319,7 +351,7 @@ const getSingleSchemeMonitoring = async (req, res) => {
         return ApiError(500, error.message, error, res);
     }
 
-}
+};
 
 const getSingleDistrictScheme = async (req, res) => {
     try {
@@ -332,7 +364,7 @@ const getSingleDistrictScheme = async (req, res) => {
     } catch (error) {
         return ApiError(500, error.message, error, res);
     }
-}
+};
 
 const getSingleStateProgress = async (req, res) => {
     try {
@@ -346,11 +378,43 @@ const getSingleStateProgress = async (req, res) => {
     } catch (error) {
         return ApiError(500, error.message, error, res);
     }
+};
+
+// SCHEME FEEDBACK
+const addSchemeFeedback = async (req, res) => {
+    try {
+        const { govt_scheme, district, feedback_type, feedback_desc } = req.body;
+
+        const existingScheme = await SchemeMonitoring.findOne({ govt_scheme, district });
+
+        if (!existingScheme) {
+            return ApiResponse(404, 'Scheme not found', null, res);
+        }
+
+        let feedbackType;
+        switch (feedback_type) {
+            case 'IssueReport':
+                feedbackType = 'IssueReport';
+                break;
+            case 'Suggestion':
+                feedbackType = 'Suggestion';
+                break;
+            case 'GeneralFeedback':
+                feedbackType = 'GeneralFeedback';
+                break;
+            default:
+                return ApiResponse(400, 'Invalid feedback type', null, res);
+        }
+
+        existingScheme.feedback.push({ type: feedbackType, description: feedback_desc });
+
+        await existingScheme.save();
+
+        return ApiResponse(200, 'Feedback added successfully', existingScheme, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
 }
-
-
-
-
 
 
 
@@ -358,5 +422,6 @@ module.exports = {
     officerNamesUpload, getAllOfficersNames, officerDistrict, officerDistrictData
     , officerDistrictDelete, officerDistrictEdit, governmentSchemes, allGovernmentSchemes,
     governmentSchemesDelete, addOfficer, deleteOfficer, editOfficer, getSingleOfficer, getSingleScheme,
-    addSchemeMonitoring, getSingleSchemeMonitoring, getSingleDistrictScheme, getSingleStateProgress
+    addSchemeMonitoring, getSingleSchemeMonitoring, getSingleDistrictScheme, getSingleStateProgress,
+    editGovernmentSchemes, getSingleSchemeDetails, addSchemeFeedback
 };

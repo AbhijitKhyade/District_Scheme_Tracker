@@ -14,6 +14,8 @@ import axios from 'axios';
 import { BASE_URL } from '../../api';
 import { Link } from 'react-router-dom';
 import ModalComp from '../../components/ModalComp';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 export default function District_Officers() {
@@ -50,6 +52,15 @@ export default function District_Officers() {
     try {
       const response = await axios.post(`${BASE_URL}/admin/officer-district-relation`, formData);
       console.log(response.data.data);
+      toast.success("Officer assigned successfully", {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       await getDistrictOfficers(); // Refresh district officers data
       setFormData({
         state: "",
@@ -61,7 +72,6 @@ export default function District_Officers() {
 
     } catch (error) {
       console.log('Error: ', error.response.data.message);
-
     }
   };
 
@@ -102,7 +112,18 @@ export default function District_Officers() {
 
   const handleDeleteConfirmation = async () => {
     try {
-      await axios.delete(`${BASE_URL}/admin/officer-district-delete?id=${selectedDeleteId}&stateId=${selectedStateId}`);
+      const response = await axios.delete(`${BASE_URL}/admin/officer-district-delete?id=${selectedDeleteId}&stateId=${selectedStateId}`);
+      if (response.data.message === 'District Officer deleted successfully') {
+        toast.success("District Officer deleted successfully", {
+          position: "top-left",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
       await getDistrictOfficers(); // Refresh district officers data
     } catch (error) {
       console.error('Error deleting district officer:', error);
@@ -124,6 +145,17 @@ export default function District_Officers() {
         officer: [{ officerName: officer[0].officerName, officerEmail: officer[0].officerEmail }]
       };
       const response = await axios.put(`${BASE_URL}/admin/officer-district-edit?id=${editedDistrict._id}&stateId=${selectedStateId}`, editedData);
+
+      toast.success("District Officer updated successfully", {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
       setEditMode(null);
       await getDistrictOfficers();
     } catch (error) {

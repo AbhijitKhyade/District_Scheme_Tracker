@@ -6,6 +6,8 @@ import { BASE_URL } from '../../api';
 import ButtonComp from '../../components/Button';
 import { getDistrict } from '../../components/OfficersModule/OfficersDashboard';
 import { useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Scheme_Monitoring() {
   let district = getDistrict();
@@ -73,9 +75,29 @@ export default function Scheme_Monitoring() {
         district: '',
         parameters: []
       });
+      toast.success("Monitoring Record Added Successfully", {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       navigate('/officers/dashboard');
     } catch (error) {
       console.log('Error:', error);
+      toast.error(error?.response?.data?.message, {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   }
 

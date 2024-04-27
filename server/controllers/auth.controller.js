@@ -4,6 +4,7 @@ const ApiError = require('../utils/ApiError');
 const ApiResponse = require('../utils/ApiResponse');
 const { hashPassword, comparePassword } = require('../utils/passwords');
 const generateToken = require('../utils/generateToken');
+const sendEmail = require('../utils/EmailService');
 
 const registerController = async (req, res) => {
     const { name, email, password, role, district } = req.body;
@@ -60,4 +61,38 @@ const verifyOfficerController = async (req, res) => {
     }
 }
 
-module.exports = { registerController, loginController, verifyOfficerController };
+const sendEmailController = async (req, res) => {
+    const { email } = req.body;
+    subject = 'Password Reset';
+
+    const resetUrl = 'http://localhost:5173/auth/reset-password';
+    const text = `Click reset password to reset your password: ${resetUrl}`;
+    try {
+        sendEmail(email, subject, text);
+        return ApiResponse(200, 'Email sent', data = null, res);
+    }
+    catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+}
+
+const resetPasswordController = async (req, res) => {
+    const { email, newPassword, confirmPassword } = req.body;
+    if (newPassword !== confirmPassword) {
+        return ApiError(400, 'Passwords do not match!', null, res);
+    }
+    try {
+        const user = await User.find(email);
+        user.password = await hashPassword(newPassword);
+        await user.save();
+        return ApiResponse(200, 'Password reset successful', data = null, res);
+    }
+    catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+}
+
+module.exports = {
+    registerController, loginController,
+    verifyOfficerController, sendEmailController, resetPasswordController
+};

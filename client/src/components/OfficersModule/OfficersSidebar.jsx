@@ -10,6 +10,8 @@ import {
 import { MdDashboard, MdRateReview } from 'react-icons/md';
 import { BiSolidPieChartAlt2 } from 'react-icons/bi';
 import { useSelector } from 'react-redux';
+import { AiFillMessage } from 'react-icons/ai';
+import { RiFeedbackFill } from 'react-icons/ri';
 
 const links = [
   {
@@ -29,6 +31,16 @@ const links = [
         path: "scheme-monitoring",
         icon: <MdRateReview className="h-5 w-5" />,
       },
+      {
+        name: "Feedback",
+        path: "feedback",
+        icon: <RiFeedbackFill className="h-5 w-5" />,
+      },
+      {
+        name: "Messages",
+        path: "messages",
+        icon: <AiFillMessage className="h-5 w-5" />,
+      }
     ],
   },
 ];

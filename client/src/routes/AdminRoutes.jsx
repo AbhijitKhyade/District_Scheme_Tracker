@@ -7,6 +7,9 @@ import Reports from '../pages/Admin/Reports'
 import Manage_Officers from '../pages/Admin/Manage_Officers'
 import Scheme_Tracking from '../pages/Admin/Scheme_Tracking'
 import SingleSchemeDetails from '../pages/Admin/SingleSchemeDetails'
+import EditSchemes from '../pages/Admin/EditSchemes'
+import Feedback from '../pages/Admin/Feedback'
+import ChatComponent from '../components/ChatComponent'
 
 export const AdminRoutes = {
     path: "admin/",
@@ -39,6 +42,18 @@ export const AdminRoutes = {
         {
             path: "single-scheme-details",
             element: <SingleSchemeDetails />
+        },
+        {
+            path: "edit-scheme",
+            element: <EditSchemes />
+        },
+        {
+            path: "feedback",
+            element: <Feedback />
+        },
+        {
+            path: "messages",
+            element: <ChatComponent />
         }
     ]
 

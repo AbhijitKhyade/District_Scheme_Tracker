@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Card,
   Input,
@@ -8,16 +8,49 @@ import {
 import { Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import ButtonComp from '../../components/Button';
+import { BASE_URL } from '../../api';
+import axios from 'axios';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function ForgotPassword() {
+  const [formData, setFormData] = useState({
+    email: "",
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(formData);
+    try {
+      const response = await axios.post(`${BASE_URL}/auth/send-email`, formData);
+      console.log(response.data);
+      toast.success(response.data.message, {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
   return (
     <div
       className="flex justify-center items-center h-[100vh] "
-    // style={{
-    //   backgroundImage: `url('../../src/assets/loginbg.jpg')`,
-    //   backgroundSize: "cover",
-    //   opacity: "1.0",
-    // }}
     >
       <Card
         color="transparent"
@@ -32,7 +65,7 @@ export default function ForgotPassword() {
           Forgot Password
         </Typography>
 
-        <form
+        <form onSubmit={handleSubmit}
           className="mt-2 flex flex-col justify-between flex-grow  "
         >
           <div className="mb-4 flex justify-between items-center">
@@ -45,10 +78,10 @@ export default function ForgotPassword() {
               <Input
                 size="lg"
                 name="email"
-                // value={formData.gmail}
+                value={formData.email}
                 placeholder="example@gmail.com"
                 label='Email'
-              // onChange={handleInputChange}
+                onChange={handleInputChange}
               />
             </div>
           </div>

@@ -12,7 +12,9 @@ import { RiShieldUserFill } from "react-icons/ri";
 import { BiSolidPieChartAlt2 } from "react-icons/bi";
 import { MdRateReview } from "react-icons/md";
 import { BiSolidReport } from "react-icons/bi";
+import { RiFeedbackFill } from "react-icons/ri";
 import "../../App.css";
+import { AiFillMessage } from "react-icons/ai";
 // import { useSelector } from "react-redux";
 
 
@@ -44,6 +46,16 @@ const links = [
       //   path: "reports",
       //   icon: <BiSolidReport className="h-5 w-5" />,
       // },
+      {
+        name: "Feedback",
+        path: "feedback",
+        icon: <RiFeedbackFill className="h-5 w-5" />,
+      },
+      {
+        name:"Messages",
+        path:"messages",
+        icon:<AiFillMessage className="h-5 w-5" />,
+      }
     ],
   },
 ];

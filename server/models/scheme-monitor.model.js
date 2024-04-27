@@ -1,6 +1,18 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const feedbackSchema = new Schema({
+    type: {
+        type: String,
+        enum: ['IssueReport', 'Suggestion', 'GeneralFeedback'],
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    }
+});
+
 const SchemeMonitoringSchema = new Schema({
     govt_scheme: {
         type: String,
@@ -31,7 +43,9 @@ const SchemeMonitoringSchema = new Schema({
     percentageProgress: {
         type: Number,
         default: 0
-    }
+    },
+    feedback: [feedbackSchema]
+
 });
 
 

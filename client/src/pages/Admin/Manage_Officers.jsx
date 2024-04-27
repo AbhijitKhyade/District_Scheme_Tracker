@@ -6,6 +6,8 @@ import { MdDelete, MdSave } from 'react-icons/md';
 import axios from 'axios';
 import { BASE_URL } from '../../api';
 import ModalComp from '../../components/ModalComp';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Manage_Officers() {
     const [formData, setFormData] = useState({
@@ -31,6 +33,16 @@ export default function Manage_Officers() {
         try {
             const response = await axios.post(`${BASE_URL}/admin/add-officer`, formData);
             console.log('response:', response.data);
+            toast.success('Officer Added Successfully', {
+                position: "top-left",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
             getAllOfficers();
             setFormData({
                 officerName: "",
@@ -55,6 +67,16 @@ export default function Manage_Officers() {
         try {
             const response = await axios.delete(`${BASE_URL}/admin/delete-officer?id=${officer_Id}`);
             console.log('response:', response.data);
+            toast.success('Officer Deleted Successfully', {
+                position: "top-left",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
             setDeleteDialogOpen(false);
             getAllOfficers();
         } catch (error) {
@@ -71,6 +93,16 @@ export default function Manage_Officers() {
         try {
             const response = await axios.put(`${BASE_URL}/admin/edit-officer?id=${editedOfficer._id}`, editedOfficer);
             console.log('response:', response.data);
+            toast.success('Officer Updated Successfully', {
+                position: "top-left",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
             setEditMode(false);
             getAllOfficers();
         } catch (error) {

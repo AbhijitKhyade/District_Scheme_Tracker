@@ -110,6 +110,17 @@ export default function Register() {
       if (formData.role === 'Citizen') {
         const response = await axios.post(`${BASE_URL}/auth/register`, formData);
         console.log(response.data);
+        toast.success(response?.data.message, {
+          position: "top-left",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
         navigate('/auth/login');
       } else {
         const response = await axios.post(`${BASE_URL}/auth/verify-officer`, formData);

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Card,
   Input,
@@ -8,16 +8,51 @@ import {
 import { Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import ButtonComp from '../../components/Button';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function ResetPassword() {
+  const [formData, setFormData] = useState({
+    email: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  }
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(formData);
+    if (formData.newPassword !== formData.confirmPassword) {
+      toast.error('Passwords do not match!', {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+
+  }
   return (
     <div
       className="flex justify-center items-center h-[100vh] "
-    // style={{
-    //   backgroundImage: `url('../../src/assets/loginbg.jpg')`,
-    //   backgroundSize: "cover",
-    //   opacity: "1.0",
-    // }}
     >
       <Card
         color="transparent"
@@ -32,11 +67,26 @@ export default function ResetPassword() {
           Reset Password
         </Typography>
 
-        <form
+        <form onSubmit={handleSubmit}
           className="mt-2 flex flex-col justify-between flex-grow  "
         >
+
+          <div className="mb-4 ">
+            <Typography variant="h6" color="blue-gray">
+              Email
+            </Typography>
+            <Input
+              size="lg"
+              name="email"
+              value={formData.email}
+              type='email'
+              placeholder='example@gmail.com'
+              label="Email"
+              onChange={handleInputChange}
+            />
+          </div>
           <div className="mb-4 flex justify-between items-center">
-            <div className="w-full">
+            <div className="w-full relative">
               <div className="flex justify-between">
                 <Typography variant="h6" color="blue-gray">
                   New Password
@@ -45,12 +95,19 @@ export default function ResetPassword() {
               <Input
                 size="lg"
                 name="newPassword"
-                type='password'
-                // value={formData.gmail}
+                value={formData.newPassword}
+                type={showPassword ? "text" : "password"}
                 placeholder="*********"
                 label='New Password'
-              // onChange={handleInputChange}
+                onChange={handleInputChange}
               />
+              <div className="absolute inset-y-0  top-6 right-0 flex items-center pr-3">
+                {showPassword ? (
+                  <FaEye className="text-gray-400 cursor-pointer" onClick={togglePasswordVisibility} />
+                ) : (
+                  <FaEyeSlash className="text-gray-400 cursor-pointer" onClick={togglePasswordVisibility} />
+                )}
+              </div>
             </div>
           </div>
 
@@ -61,20 +118,19 @@ export default function ResetPassword() {
             <Input
               size="lg"
               name="confirmPassword"
-              // value={formData.password}
-              // type={showPassword ? "text" : "password"}
-              type='password'
+              value={formData.confirmPassword}
+              type={showPassword ? "text" : "password"}
               placeholder='*********'
               label="Confirm Password"
-            // onChange={handleInputChange}
+              onChange={handleInputChange}
             />
-            {/* <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-            {showPassword ? (
-              <FaEye className="text-gray-400 cursor-pointer" onClick={togglePasswordVisibility} />
-            ) : (
-              <FaEyeSlash className="text-gray-400 cursor-pointer" onClick={togglePasswordVisibility} />
-            )}
-          </div> */}
+            <div className="absolute inset-y-0 top-6 right-0 flex items-center pr-3">
+              {showPassword ? (
+                <FaEye className="text-gray-400 cursor-pointer" onClick={togglePasswordVisibility} />
+              ) : (
+                <FaEyeSlash className="text-gray-400 cursor-pointer" onClick={togglePasswordVisibility} />
+              )}
+            </div>
           </div>
 
           <ButtonComp name={"Reset Password"} type={'submit'} className={'mt-4 mb-2'} fullWidth />

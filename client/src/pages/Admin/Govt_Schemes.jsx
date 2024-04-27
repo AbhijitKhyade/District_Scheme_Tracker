@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Input, Textarea, Typography } from "@material-tailwind/react";
 import ButtonComp from '../../components/Button';
-import { MdEdit, MdDelete } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
+import { FaEdit } from "react-icons/fa";
 import axios from 'axios';
 import { BASE_URL } from '../../api';
 import ModalComp from '../../components/ModalComp';
+import { Link } from 'react-router-dom';
 
 export default function GovtSchemes() {
   const [formData, setFormData] = useState({
@@ -157,7 +159,7 @@ export default function GovtSchemes() {
               <li key={scheme._id} className="text-lg flex items-center justify-between">
                 <span>{scheme.govt_scheme}</span>
                 <div className="flex items-center space-x-2">
-                  <MdEdit className="text-blue-600 hover:text-blue-900 w-5 h-5 cursor-pointer" />
+                  <Link to={`/admin/edit-scheme?name=${scheme.govt_scheme}`}><FaEdit className="text-blue-600 hover:text-blue-900 w-5 h-5 cursor-pointer" /></Link>
                   <MdDelete className="text-red-600 hover:text-red-900 w-5 h-5 cursor-pointer"
                     onClick={() => {
                       setDeleteDialogOpen(true);
