@@ -116,11 +116,11 @@ export default function SingleSchemeDetails() {
     };
 
     return (
-        <div className='m-2 px-4 h-auto'>
+        <div className='m-2 px-4 h-screen'>
             <Typography variant='h3' >Scheme Progress </Typography>
 
-            <div className='flex gap-3 mt-4'>
-                <div className='w-1/2 sm:w-full'>
+            <div className='flex flex-col sm:flex-row gap-3 mt-4 '>
+                <div className='lg:w-1/2 sm:w-full'>
                     <Select
                         options={states_districts?.map(state =>
                             ({ value: state.state, label: state.state }))}
@@ -130,7 +130,7 @@ export default function SingleSchemeDetails() {
                         classNamePrefix="select"
                     />
                 </div>
-                <div className='w-1/2 sm:w-full'>
+                <div className='lg:w-1/2 sm:w-full'>
                     <Select
                         options={states_districts?.find(state => state.state === formData.state)?.districts?.map(district =>
                             ({ value: district, label: district }))}

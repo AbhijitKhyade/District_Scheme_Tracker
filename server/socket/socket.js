@@ -5,27 +5,31 @@ module.exports = function (server) {
     const io = socketIo(server, {
         cors: {
             origin: '*',
-        }
+        },
+        pingTimeout: 60000,
     });
 
-    io.on('connection', (socket) => {
-        console.log('New client connected');
+    const users = {};
 
-        // Handle new messages
-        socket.on('newMessage', async (data) => {
-            try {
-                const { sender, receiver, message } = data;
-                const newMessage = new Message({ sender, receiver, message });
-                await newMessage.save();
-                io.emit('newMessage', newMessage);
-            } catch (error) {
-                console.error('Error saving message:', error);
-            }
+    io.on('connection', (socket) => {
+        socket.on('new-user', (username) => {
+            users[socket.id] = username;
         });
 
-        // Handle disconnection
+        socket.on('send-message', async (data) => {
+            const { message, receiver, sender } = data;
+            console.log(data);
+            const newMessage = new Message({
+                sender,
+                receiver,
+                message,
+            });
+            await newMessage.save();
+            io.emit('receive-message', { message, sender });
+        });
+
         socket.on('disconnect', () => {
-            console.log('Client disconnected');
+            delete users[socket.id];
         });
     });
 
