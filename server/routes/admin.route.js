@@ -1,5 +1,14 @@
 const express = require('express');
-const { officerNamesUpload, getAllOfficersNames, officerDistrict, officerDistrictData, officerDistrictDelete, officerDistrictEdit, governmentSchemes, allGovernmentSchemes, governmentSchemesDelete, addOfficer, deleteOfficer, editOfficer, getSingleOfficer, getSingleScheme, addSchemeMonitoring, getSingleSchemeMonitoring, getSingleDistrictScheme, getSingleStateProgress, editGovernmentSchemes, getSingleSchemeDetails, addSchemeFeedback } = require('../controllers/admin.controller');
+const { officerNamesUpload, getAllOfficersNames, officerDistrict,
+    officerDistrictData, officerDistrictDelete, officerDistrictEdit,
+    governmentSchemes, allGovernmentSchemes, governmentSchemesDelete, addOfficer,
+    deleteOfficer, editOfficer, getSingleOfficer, getSingleScheme, addSchemeMonitoring,
+    getSingleSchemeMonitoring, getSingleDistrictScheme, getSingleStateProgress,
+    editGovernmentSchemes, getSingleSchemeDetails,
+    addSchemeFeedback,
+    schemeFeedbacks,
+    getMessages
+} = require('../controllers/admin.controller');
 
 const router = express.Router();
 
@@ -31,5 +40,9 @@ router.get('/get-single-state-progress', getSingleStateProgress);
 
 //SCHEME FEEDBACK
 router.post('/add-scheme-feedback', addSchemeFeedback);
+router.get('/scheme-feedbacks', schemeFeedbacks);
+
+//MESSAGES
+router.get('/messages', getMessages);
 
 module.exports = router;

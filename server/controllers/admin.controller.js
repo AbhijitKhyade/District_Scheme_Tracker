@@ -1,4 +1,5 @@
 const DistrictOfficer = require('../models/district-officer.model');
+const Message = require('../models/message.model');
 const Officer = require('../models/officers.model');
 const SchemeMonitoring = require('../models/scheme-monitor.model');
 const Schemes = require('../models/scheme.model');
@@ -416,12 +417,33 @@ const addSchemeFeedback = async (req, res) => {
     }
 }
 
+const schemeFeedbacks = async (req, res) => {
+    try {
+        const { govt_scheme, district } = req.query;
+        const feedbacks = await SchemeMonitoring.find({ govt_scheme, district }, { feedback: 1 });
+        return ApiResponse(200, 'Scheme Feedbacks', feedbacks, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+};
 
+
+//MESSAGES
+const getMessages = async (req, res) => {
+    try {
+        const receiver = req.query.receiver;
+        console.log(receiver);
+        const messages = await Message.find({ receiver });
+        return ApiResponse(200, 'Messages', messages, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+};
 
 module.exports = {
     officerNamesUpload, getAllOfficersNames, officerDistrict, officerDistrictData
     , officerDistrictDelete, officerDistrictEdit, governmentSchemes, allGovernmentSchemes,
     governmentSchemesDelete, addOfficer, deleteOfficer, editOfficer, getSingleOfficer, getSingleScheme,
     addSchemeMonitoring, getSingleSchemeMonitoring, getSingleDistrictScheme, getSingleStateProgress,
-    editGovernmentSchemes, getSingleSchemeDetails, addSchemeFeedback
+    editGovernmentSchemes, getSingleSchemeDetails, addSchemeFeedback, schemeFeedbacks, getMessages
 };

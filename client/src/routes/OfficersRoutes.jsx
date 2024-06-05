@@ -1,7 +1,7 @@
 import ChatComponent from "../components/ChatComponent";
 import OfficersDashboard from "../components/OfficersModule/OfficersDashboard";
 import OfficersLayout from "../layouts/OfficersLayout";
-import Feedback from "../pages/Admin/Feedback";
+import Feedback from "../pages/Officers/Feedback";
 import Govt_Schemes from "../pages/Officers/Govt_Schemes";
 import Scheme_Monitoring from "../pages/Officers/Scheme_Monitoring";
 
@@ -24,7 +24,7 @@ export const OfficersRoutes = {
         },
         {
             path: "feedback",
-            element: <Feedback />
+            element: < Feedback />
         },
         {
             path: "messages",

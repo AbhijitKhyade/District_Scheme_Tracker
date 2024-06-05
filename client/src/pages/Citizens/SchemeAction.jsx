@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 export default function SchemeAction() {
     const currentUser = useSelector(state => state.user.currentUser);
     const localtion = useLocation();
@@ -62,7 +63,7 @@ export default function SchemeAction() {
                 progress: undefined,
                 theme: "light",
             });
-            navigate('/citizen/govt-schemes');
+            navigate('/citizens/govt-schemes');
         } catch (error) {
             console.log('error:', error);
         }
