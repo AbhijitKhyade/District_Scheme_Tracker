@@ -28,13 +28,13 @@ export default function EditSchemes() {
     };
 
     const handleEdit = async () => {
-        console.log(formData);
+        // console.log(formData);
         if (!formData.scheme || !formData.objective || !formData.description || !formData.parameters) {
             alert('Please fill all the fields');
         }
         try {
             const response = await axios.put(`${BASE_URL}/admin/edit-govt-scheme?name=${name}`, formData);
-            console.log('response : ', response?.data?.data);
+            // console.log('response : ', response?.data?.data);
             toast.success('Scheme Updated Successfully', {
                 position: "top-left",
                 autoClose: 1500,
@@ -54,7 +54,7 @@ export default function EditSchemes() {
     const allGovtSchemes = async () => {
         try {
             const response = await axios.get(`${BASE_URL}/admin/get-single-scheme-details?name=${name}`);
-            console.log('response : ', response?.data?.data);
+            // console.log('response : ', response?.data?.data);
             setFormData({
                 scheme: response?.data?.data?.govt_scheme,
                 objective: response?.data?.data?.objective,

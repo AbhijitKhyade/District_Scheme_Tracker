@@ -30,7 +30,7 @@ const UploadModal = ({ isOpen, onClose }) => {
                     // console.log('data to send:', formattedData);
                     // Send the excelData to the backend
                     const response = await axios.post(`${BASE_URL}/admin/officers-uploads`, { data: formattedData });
-                    console.log('Data uploaded successfully:', response.data);
+                    // console.log('Data uploaded successfully:', response.data);
                     onClose();
                 };
                 reader.readAsArrayBuffer(selectedFile);

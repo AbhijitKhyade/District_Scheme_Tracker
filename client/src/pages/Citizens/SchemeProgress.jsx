@@ -34,7 +34,7 @@ export default function SchemeProgress() {
     const getSchemeProgress = async () => {
         try {
             const response = await axios.get(`${BASE_URL}/admin/get-single-scheme-monitoring?name=${name}&district=${district}`);
-            console.log('response:', response.data.data);
+            // console.log('response:', response.data.data);
             const data = response.data.data;
             setSchemeProgress({
                 govt_scheme: data.govt_scheme,
@@ -64,7 +64,7 @@ export default function SchemeProgress() {
     const determineChartType = (value) => {
         if (Array.isArray(value)) {
             const isNumericArray = value.every((val) => !isNaN(val));
-            console.log('isNumericArray:', isNumericArray)
+            // console.log('isNumericArray:', isNumericArray)
             if (isNumericArray) {
                 return "bar"; // For numerical arrays, use a line chart
             } else {

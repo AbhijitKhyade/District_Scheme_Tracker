@@ -32,7 +32,7 @@ export default function Manage_Officers() {
         e.preventDefault();
         try {
             const response = await axios.post(`${BASE_URL}/admin/add-officer`, formData);
-            console.log('response:', response.data);
+            // console.log('response:', response.data);
             toast.success('Officer Added Successfully', {
                 position: "top-left",
                 autoClose: 1500,
@@ -66,7 +66,7 @@ export default function Manage_Officers() {
     const handleDeleteOfficer = async () => {
         try {
             const response = await axios.delete(`${BASE_URL}/admin/delete-officer?id=${officer_Id}`);
-            console.log('response:', response.data);
+            // console.log('response:', response.data);
             toast.success('Officer Deleted Successfully', {
                 position: "top-left",
                 autoClose: 1500,
@@ -92,7 +92,7 @@ export default function Manage_Officers() {
     const handleSave = async () => {
         try {
             const response = await axios.put(`${BASE_URL}/admin/edit-officer?id=${editedOfficer._id}`, editedOfficer);
-            console.log('response:', response.data);
+            // console.log('response:', response.data);
             toast.success('Officer Updated Successfully', {
                 position: "top-left",
                 autoClose: 1500,
@@ -113,7 +113,7 @@ export default function Manage_Officers() {
     useEffect(() => {
         getAllOfficers();
     }, []);
-
+    const isDisabled = !formData.officerName || !formData.officerEmail;
     return (
         <div className='m-2 px-4'>
             <Typography color="blueGray" variant='h3' size="2xl" font="bold">
@@ -148,7 +148,7 @@ export default function Manage_Officers() {
                         />
                     </div>
                     <div className='w-full sm:w-auto'>
-                        <ButtonComp name={editMode ? 'Save' : 'Add'} type="submit" onClick={editMode ? handleSave : handleAddOfficer} />
+                        <ButtonComp name={editMode ? 'Save' : 'Add'} type="submit" disabled={isDisabled} onClick={editMode ? handleSave : handleAddOfficer} />
                     </div>
                 </div>
             </form>

@@ -5,11 +5,13 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import ButtonComp from '../../components/Button';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from 'axios';
+import { BASE_URL } from '../../api';
 
 export default function ResetPassword() {
   const [formData, setFormData] = useState({
@@ -17,7 +19,7 @@ export default function ResetPassword() {
     newPassword: "",
     confirmPassword: "",
   });
-
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
   const handleInputChange = (e) => {
@@ -32,9 +34,28 @@ export default function ResetPassword() {
     setShowPassword(!showPassword);
   }
 
+  const isValidEmail = (email) => {
+    // Regex for validating email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    // console.log(formData);
+    if (!isValidEmail(formData.email)) {
+      toast.warning("Enter a valid email address", {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
     if (formData.newPassword !== formData.confirmPassword) {
       toast.error('Passwords do not match!', {
         position: "top-left",
@@ -48,7 +69,33 @@ export default function ResetPassword() {
       });
       return;
     }
-
+    try {
+      const response = await axios.post(`${BASE_URL}/auth/reset-password`, formData);
+      // console.log(response.data);
+      toast.success(response.data.message, {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      navigate('/auth/login');
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response.data.message, {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   }
   return (
     <div

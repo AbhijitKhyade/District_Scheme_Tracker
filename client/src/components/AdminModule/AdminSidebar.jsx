@@ -51,11 +51,11 @@ const links = [
         path: "feedback",
         icon: <RiFeedbackFill className="h-5 w-5" />,
       },
-      {
-        name:"Messages",
-        path:"messages",
-        icon:<AiFillMessage className="h-5 w-5" />,
-      }
+      // {
+      //   name:"Messages",
+      //   path:"messages",
+      //   icon:<AiFillMessage className="h-5 w-5" />,
+      // }
     ],
   },
 ];

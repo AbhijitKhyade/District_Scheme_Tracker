@@ -45,13 +45,33 @@ export default function Register() {
     });
   };
 
+  const isValidEmail = (email) => {
+    // Regex for validating email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    if (!isValidEmail(formData.email)) {
+      toast.warning("Enter a valid email address", {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+
     if (!formData.role) {
       toast.warning("Please select a role", {
         position: "top-left",
@@ -103,13 +123,25 @@ export default function Register() {
         theme: "light",
       });
       return;
+    } else if (formData.role === 'Citizen' && !formData.district) {
+      toast.warning("Please select your district", {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
     }
-
+    // console.log(formData);
     try {
       setLoading(true);
       if (formData.role === 'Citizen') {
         const response = await axios.post(`${BASE_URL}/auth/register`, formData);
-        console.log(response.data);
+        // console.log(response.data);
         toast.success(response?.data.message, {
           position: "top-left",
           autoClose: 1500,
@@ -124,7 +156,7 @@ export default function Register() {
         navigate('/auth/login');
       } else {
         const response = await axios.post(`${BASE_URL}/auth/verify-officer`, formData);
-        console.log(response.data);
+        // console.log(response.data);
         navigate('/auth/login');
       }
       setLoading(false);
@@ -155,7 +187,8 @@ export default function Register() {
     }
   }
 
-  const districtOptions = states_districts.find(state => state.state === formData.state).districts;
+  // const districtOptions = states_districts.find(state => state.state === formData.state).districts;
+
   return (
     <div
       className="flex justify-center items-center h-[100vh]"
@@ -264,32 +297,37 @@ export default function Register() {
                       District
                     </Typography>
                   </div>
-                  <Input
+                  {/* <Input
                     size="lg"
                     name="district"
                     value={formData.district}
                     placeholder="Pune"
                     label='District'
                     onChange={handleInputChange}
-                  />
-                  {/* <Select
+                  /> */}
+                  <Select
                     label='District'
                     size="lg"
                     name='district'
+                    value={formData.district}
                     onChange={(value) =>
                       handleInputChange({
                         target: { name: "district", value },
                       })
                     }
-                    className='bg-black'
                   >
                     <Option value="" disabled>Select District</Option>
-                    {districtOptions.map((district) => {
+                    <Option value="Pune" >Pune</Option>
+                    <Option value="Solapur" >Solapur</Option>
+                    <Option value="Sangli" >Sangli</Option>
+                    <Option value="Kolhapur" >Kolhapur</Option>
+                    {/* {districtOptions.map((district) => {
                       return (
+                        // <Option value={district} key={district} >{district}</Option>
                         <Option value={district} key={district} >{district}</Option>
                       )
-                    })}
-                  </Select> */}
+                    })} */}
+                  </Select>
 
 
                 </div>

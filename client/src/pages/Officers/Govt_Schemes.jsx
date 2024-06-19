@@ -16,7 +16,7 @@ export default function Govt_Schemes() {
     }
   }
 
-  
+
   useEffect(() => {
     getSchemes();
   }, []);
@@ -26,9 +26,9 @@ export default function Govt_Schemes() {
   return (
     <div className='m-2 px-4'>
       <Typography variant='h3' size='xl'>Government Schemes</Typography>
-      <div className='grid grid-cols-1 gap-4 mt-4'>
+      <div className='grid grid-cols-1 gap-4 mt-4 '>
         {schemes?.map((scheme, index) => (
-          <Card key={index} className='border border-gray-300 w-full rounded-sm'>
+          <Card key={index} className='border border-gray-300 w-full rounded-sm hover:shadow-2xl'>
             <div className='overflow-x-auto'>
               <div className='flex items-center justify-between border-gray-200 px-4 py-2'>
                 <div className='flex flex-col justify-start'>
@@ -54,8 +54,6 @@ export default function Govt_Schemes() {
                       ))}
                     </ul>
                   </div>
-
-
                 </div>
               </div>
             </div>

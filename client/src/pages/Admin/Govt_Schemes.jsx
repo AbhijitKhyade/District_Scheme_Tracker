@@ -29,13 +29,13 @@ export default function GovtSchemes() {
   };
 
   const handleSubmit = async () => {
-    console.log(formData);
+    // console.log(formData);
     if (!formData.scheme || !formData.objective || !formData.description || !formData.parameters) {
       alert('Please fill all the fields');
     }
     try {
       const response = await axios.post(`${BASE_URL}/admin/govt-schemes`, formData);
-      console.log('response : ', response?.data?.data);
+      // console.log('response : ', response?.data?.data);
       setFormData({
         scheme: "",
         objective: "",
@@ -70,12 +70,14 @@ export default function GovtSchemes() {
     try {
 
       const response = await axios.delete(`${BASE_URL}/admin/delete-govt-scheme?id=${schemeId}`);
-      console.log(response.data.data);
+      // console.log(response.data.data);
       allGovtSchemes();
     } catch (error) {
       console.log('Error: ', error);
     }
   }
+
+  const isDisabled = !formData.scheme || !formData.objective || !formData.description || !formData.parameters;
 
   return (
     <div className='m-2 px-4'>
@@ -137,12 +139,13 @@ export default function GovtSchemes() {
           <ButtonComp
             name={"Add Scheme"}
             onClick={handleSubmit}
+            disabled={isDisabled}
             type={'submit'}
             className={'font-bold py-3 px-4 rounded-md mt-2 cursor-pointer'}
             fullWidth
           />
           <ButtonComp
-            name={"Show Schemes"}
+            name={showSchemes ? "Hide Schemes" : "Show Schemes"}
             type={'button'}
             onClick={handleSchemeChange}
             className={'font-bold py-3 px-4 rounded-md mt-2 cursor-pointer sm:ml-2'}

@@ -2,6 +2,7 @@ import React from 'react'
 import { BiSolidPieChartAlt2 } from 'react-icons/bi';
 import { MdDashboard } from 'react-icons/md';
 import { GiProgression } from "react-icons/gi";
+import { FaCompass } from 'react-icons/fa';
 import { Link } from "react-router-dom";
 
 import {
@@ -30,11 +31,16 @@ const links = [
         path: "schemes-summary",
         icon: <GiProgression className="h-5 w-5" />,
       },
+      {
+        name: "Scheme Exploration",
+        path: "schemes-explore",
+        icon: <FaCompass className="h-5 w-5" />,
+      },
     ],
   },
 ];
 
-export default function CitizensSidebar() {
+export default function CitizensSidebar({ closeSidebar }) {
   const currentUser = useSelector((state) => state.user.currentUser);
   const activeLink =
     "flex items-center gap-3 pl-2 pt-3 pb-2.5 rounded-lg text-white text-md m-2 w-full ";
@@ -42,7 +48,7 @@ export default function CitizensSidebar() {
     "flex items-center gap-3 pl-2 pt-3 pb-2.5 rounded-lg text-md text-gray-700 dark:text-gray-200 dark:hover:text-black m-2 w-full";
 
   return (
-    <div className="h-auto lg:max-w-[18rem] w-1/24 sm:w-2/5 p-4 shadow-blue-gray-900/5 ">
+    <div className="h-auto lg:max-w-[18rem] w-1/24 sm:w-2/5 p-4 shadow-blue-gray-900/5">
       <div>
         <div className="mb-1 p-2">
           <Typography
@@ -67,7 +73,7 @@ export default function CitizensSidebar() {
                 {item.links.map((link) => (
                   <Link
                     to={`/citizens/${link.path}`}
-                    // onClick={closeSidebar}
+                    onClick={closeSidebar}
                     key={link.name}
                     className={({ isActive }) =>
                       isActive ? activeLink : normalLink

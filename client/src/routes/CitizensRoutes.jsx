@@ -2,6 +2,7 @@ import CitizensDashbord from "../components/CitizensModule/CitizensDashbord";
 import CitizensLayout from "../layouts/CitizensLayout";
 import Govt_Schemes from "../pages/Citizens/Govt_Schemes";
 import SchemeAction from "../pages/Citizens/SchemeAction";
+import SchemeExplore from "../pages/Citizens/SchemeExplore";
 import SchemeProgress from "../pages/Citizens/SchemeProgress";
 import SchemeSummary from "../pages/Citizens/SchemeSummary";
 
@@ -28,6 +29,10 @@ export const CitizensRoutes = {
         {
             path: "scheme",
             element: <SchemeAction />
-        }
+        },
+        {
+            path: "schemes-explore",
+            element: <SchemeExplore />
+        },
     ]
 }

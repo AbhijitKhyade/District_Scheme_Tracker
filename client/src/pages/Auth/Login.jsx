@@ -37,13 +37,19 @@ export default function Login() {
     });
   };
 
+  const isValidEmail = (email) => {
+    // Regex for validating email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    // console.log(formData);
     try {
       if (!formData.email && !formData.password) {
         toast.warning("Please enter your email and password", {
@@ -73,6 +79,19 @@ export default function Login() {
       }
       else if (!formData.password) {
         toast.warning("Please enter your password", {
+          position: "top-left",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      }
+      if (!isValidEmail(formData.email)) {
+        toast.warning("Enter a valid email address", {
           position: "top-left",
           autoClose: 1500,
           hideProgressBar: false,

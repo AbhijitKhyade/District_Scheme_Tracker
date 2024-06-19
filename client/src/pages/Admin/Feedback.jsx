@@ -47,7 +47,7 @@ const Feedback = () => {
       setLoading(true);
 
       const res = await axios.get(`${BASE_URL}/admin/scheme-feedbacks?district=${district}&govt_scheme=${scheme}`);
-      console.log(res.data.data[0].feedback);
+      // console.log(res.data.data[0].feedback);
       setFeedbacks(res.data.data[0].feedback);
       setLoading(false);
     } catch (error) {
@@ -84,7 +84,7 @@ const Feedback = () => {
 
   const totalPages = Math.ceil(feedbacks.length / itemsPerPage);
   return (
-    <div className='m-2 px-4'>
+    <div className='m-2 px-4 h-screen'>
       <Typography className='text-center' color="blueGray" variant='h3' size="xl">Feedback</Typography>
       <div className='flex flex-col gap-3 lg:flex-row justify-between mt-4 mb-4'>
         <div className="lg:w-1/2 sm:w-full sm:mt-3 ">
@@ -109,10 +109,10 @@ const Feedback = () => {
       </div>
       {feedbacks.length > 0 &&
         <>
-          <div className='mt-3'>
+          <div className='mt-3  '>
             <div>
               <h2 className="text-xl font-semibold mt-6 mb-2">Issue Reports</h2>
-              <div className="flex flex-wrap">
+              <div className="flex flex-wrap ">
                 {renderFeedbacksByType('IssueReport')}
               </div>
             </div>

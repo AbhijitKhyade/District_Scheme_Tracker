@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Card,
   Input,
   Button,
   Typography,
 } from "@material-tailwind/react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import ButtonComp from '../../components/Button';
 import { BASE_URL } from '../../api';
@@ -17,6 +17,9 @@ export default function ForgotPassword() {
   const [formData, setFormData] = useState({
     email: "",
   });
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const [emailSent, setEmailSent] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -26,12 +29,47 @@ export default function ForgotPassword() {
     });
   }
 
+  const isValidEmail = (email) => {
+    // Regex for validating email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    if (formData.email === "") {
+      toast.warning("Email is required", {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+
+    if (!isValidEmail(formData.email)) {
+      toast.warning("Enter a valid email address", {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+    // console.log(formData);
     try {
+      setLoading(true);
       const response = await axios.post(`${BASE_URL}/auth/send-email`, formData);
-      console.log(response.data);
+      // console.log(response.data);
       toast.success(response.data.message, {
         position: "top-left",
         autoClose: 1500,
@@ -42,10 +80,32 @@ export default function ForgotPassword() {
         progress: undefined,
         theme: "light",
       });
+      setLoading(false);
+      setEmailSent(true);
     } catch (error) {
+      setLoading(false);
       console.log(error);
+      toast.error(error.response.data.message, {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   }
+
+  useEffect(() => {
+    if (emailSent) {
+      const timer = setTimeout(() => {
+        navigate('/auth/login'); // Redirect to login after 5 seconds
+      }, 5000);
+      return () => clearTimeout(timer); // Clear the timeout if component unmounts
+    }
+  }, [emailSent, navigate]);
 
 
   return (
@@ -86,7 +146,7 @@ export default function ForgotPassword() {
             </div>
           </div>
 
-          <ButtonComp name={"Send Email"} type={'submit'} className={'mt-4 mb-2'} fullWidth />
+          <ButtonComp name={"Send Email"} type={'submit'} className={'mt-4 mb-2'} fullWidth loading={loading} />
 
         </form>
       </Card>

@@ -18,7 +18,7 @@ module.exports = function (server) {
 
         socket.on('send-message', async (data) => {
             const { message, receiver, sender } = data;
-            console.log(data);
+            // console.log(data);
             const newMessage = new Message({
                 sender,
                 receiver,

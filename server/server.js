@@ -14,11 +14,11 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/auth.route'));
-app.use('/api/admin', require('./routes/admin.route'));
+app.use('/api/admin', require('./routes/generic.route'));
 
 const server = http.createServer(app);
 
-const io = require('./socket/socket')(server);
+// const io = require('./socket/socket')(server);
 
 server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

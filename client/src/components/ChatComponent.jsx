@@ -21,7 +21,7 @@ const ChatComponent = () => {
     const getDistrictOfficers = async () => {
         try {
             const response = await axios.get(`${BASE_URL}/admin/get-officers-names`);
-            console.log('District Officers:', response?.data?.data);
+            // console.log('District Officers:', response?.data?.data);
             setOfficers(response?.data?.data);
         } catch (error) {
             console.log('Error: ', error);
@@ -30,9 +30,9 @@ const ChatComponent = () => {
 
     const fetchMessages = async (selectedUser) => {
         try {
-            console.log(selectedUser)
+            // console.log(selectedUser)
             const response = await axios.get(`${BASE_URL}/admin/messages?receiver=${selectedUser._id || admin_id}`);
-            console.log(response.data.data)
+            // console.log(response.data.data)
             setMessages(response.data.data);
         } catch (error) {
             console.log('Error fetching messages:', error);

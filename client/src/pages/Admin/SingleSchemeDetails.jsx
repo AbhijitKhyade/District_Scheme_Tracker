@@ -34,7 +34,7 @@ export default function SingleSchemeDetails() {
             const response = await axios.get(`${BASE_URL}/admin/all-govt-schemes`);
             const data = response.data.data;
             const schemes = data.map(scheme => ({ value: scheme.govt_scheme, label: scheme.govt_scheme }));
-            console.log(schemes)
+            // console.log(schemes)
             setGovtSchemes(schemes);
         } catch (error) {
             console.log('error:', error);
@@ -44,11 +44,11 @@ export default function SingleSchemeDetails() {
 
     const getSchemeProgress = async () => {
         try {
-            console.log(formData);
+            // console.log(formData);
             // Ensure formData.district is defined before making the API call
             if (formData.district && formData.govt_scheme) {
                 const response = await axios.get(`${BASE_URL}/admin/get-single-scheme-monitoring?name=${formData.govt_scheme}&district=${formData.district}`);
-                console.log('response:', response.data.data);
+                // console.log('response:', response.data.data);
                 const data = response.data.data;
                 setFormData({
                     ...formData, // Preserve other form data
@@ -82,7 +82,7 @@ export default function SingleSchemeDetails() {
     const determineChartType = (value) => {
         if (Array.isArray(value)) {
             const isNumericArray = value.every((val) => !isNaN(val));
-            console.log('isNumericArray:', isNumericArray)
+            // console.log('isNumericArray:', isNumericArray)
             if (isNumericArray) {
                 return "bar"; // For numerical arrays, use a line chart
             } else {

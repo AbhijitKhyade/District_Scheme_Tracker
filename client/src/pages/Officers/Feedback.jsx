@@ -38,7 +38,7 @@ const Feedback = () => {
         try {
             setLoading(true);
             const res = await axios.get(`${BASE_URL}/admin/scheme-feedbacks?district=${district}&govt_scheme=${scheme}`);
-            console.log(res.data.data[0].feedback);
+            // console.log(res.data.data[0].feedback);
             setFeedbacks(res.data.data[0].feedback);
             setLoading(false);
         } catch (error) {

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { BASE_URL } from '../../api';
 import { Typography } from '@material-tailwind/react';
+import { districtMaps } from '../../data';
 
 let districtValue = '';
 
@@ -23,10 +24,11 @@ export default function OfficersDashboard() {
   const getOfficerDistrict = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/admin/get-single-officer?email=${currentUser.email}`);
-      console.log('response:', response.data.data);
-      setDistrict(response.data.data[0].district);
-      setMapUrl(response.data.data[0].mapUrl);
-      setState(response.data.data[0].state);
+      // console.log('response:', response.data.data);
+      const officerData = response.data.data[0];
+      setDistrict(officerData.district);
+      setMapUrl(districtMaps[officerData.district]); // Set mapUrl based on district name
+      setState(officerData.state);
     } catch (error) {
       console.log('error:', error);
     }

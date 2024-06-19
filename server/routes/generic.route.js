@@ -7,8 +7,9 @@ const { officerNamesUpload, getAllOfficersNames, officerDistrict,
     editGovernmentSchemes, getSingleSchemeDetails,
     addSchemeFeedback,
     schemeFeedbacks,
-    getMessages
-} = require('../controllers/admin.controller');
+    getMessages,
+    exploreSchemes
+} = require('../controllers/generic.controller');
 
 const router = express.Router();
 
@@ -44,5 +45,8 @@ router.get('/scheme-feedbacks', schemeFeedbacks);
 
 //MESSAGES
 router.get('/messages', getMessages);
+
+//SCHEME EXPLORER
+router.post('/scheme-explorer', exploreSchemes);
 
 module.exports = router;

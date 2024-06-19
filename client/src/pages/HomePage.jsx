@@ -13,7 +13,8 @@ export default function HomePage() {
             style={{
               backgroundImage: 'linear-gradient(45deg, #FFB800, #FF6347)',
               WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
+              WebkitTextFillColor: 'transparent',
+              zIndex: -1
             }}>Welcome to District Schemes </Typography>
           <div className='mt-4'>
             <img src={map} alt="India" />

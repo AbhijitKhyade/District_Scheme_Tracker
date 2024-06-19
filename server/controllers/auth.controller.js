@@ -63,12 +63,24 @@ const verifyOfficerController = async (req, res) => {
 
 const sendEmailController = async (req, res) => {
     const { email } = req.body;
+    const userExist = await User.findOne({ email });
+    if (!userExist) {
+        return ApiError(400, 'User not found! Please Register', null, res);
+    }
     subject = 'Password Reset';
 
-    const resetUrl = 'http://localhost:5173/auth/reset-password';
-    const text = `Click reset password to reset your password: ${resetUrl}`;
+    const resetUrl = `${process.env.RESET_PASSWORD_URL}/auth/reset-password`;
+    // const text = `Click reset password to reset your password: ${resetUrl}`;
+    const textContent = `
+    Hi,
+
+    You requested to reset your password. Please click the link below to reset your password:
+    ${resetUrl}
+
+    If you did not request this, please ignore this email.
+`;
     try {
-        sendEmail(email, subject, text);
+        sendEmail(email, subject, textContent);
         return ApiResponse(200, 'Email sent', data = null, res);
     }
     catch (error) {
@@ -78,13 +90,17 @@ const sendEmailController = async (req, res) => {
 
 const resetPasswordController = async (req, res) => {
     const { email, newPassword, confirmPassword } = req.body;
+    // console.log(req.body)
     if (newPassword !== confirmPassword) {
         return ApiError(400, 'Passwords do not match!', null, res);
     }
     try {
-        const user = await User.find(email);
-        user.password = await hashPassword(newPassword);
-        await user.save();
+        const user = await User.findOne({ email });
+        if (!user) {
+            return ApiError(400, 'User not found!', null, res);
+        }
+        const hashedPassword = await hashPassword(newPassword);
+        await User.findOneAndUpdate({ email }, { password: hashedPassword }, { new: true });
         return ApiResponse(200, 'Password reset successful', data = null, res);
     }
     catch (error) {

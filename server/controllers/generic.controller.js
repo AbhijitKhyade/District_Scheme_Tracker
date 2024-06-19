@@ -1,3 +1,6 @@
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const mongoose = require('mongoose');
+
 const DistrictOfficer = require('../models/district-officer.model');
 const Message = require('../models/message.model');
 const Officer = require('../models/officers.model');
@@ -5,8 +8,6 @@ const SchemeMonitoring = require('../models/scheme-monitor.model');
 const Schemes = require('../models/scheme.model');
 const ApiError = require('../utils/ApiError');
 const ApiResponse = require('../utils/ApiResponse');
-const mongoose = require('mongoose');
-
 
 // OFFICERS
 const officerNamesUpload = async (req, res) => {
@@ -107,13 +108,13 @@ const officerDistrictDelete = async (req, res) => {
             { new: true }
         );
 
-        console.log('Deleted data:', data);
+        // console.log('Deleted data:', data);
 
         if (!data) {
             return ApiResponse(404, 'District not found', null, res);
         }
 
-        console.log('Deleted district:', data);
+        // console.log('Deleted district:', data);
         return ApiResponse(200, 'District Deleted Successfully', null, res);
     } catch (error) {
         return ApiError(500, error.message, error, res);
@@ -251,7 +252,7 @@ const allGovernmentSchemes = async (req, res) => {
 const governmentSchemesDelete = async (req, res) => {
     try {
         const id = req.query.id;
-        console.log(id);
+        // console.log(id);
         await Schemes.findByIdAndDelete(id);
         return ApiResponse(200, 'Govt Scheme deleted Successfully', null, res);
     } catch (error) {
@@ -342,7 +343,7 @@ const addSchemeMonitoring = async (req, res) => {
 const getSingleSchemeMonitoring = async (req, res) => {
     try {
         const { name, district } = req.query;
-        console.log('name, district:', name, district)
+        // console.log('name, district:', name, district)
         const schemeMonitoring = await SchemeMonitoring.findOne({ govt_scheme: name, district });
         if (!schemeMonitoring) {
             return ApiResponse(400, 'Scheme Monitoring not found', null, res);
@@ -432,7 +433,7 @@ const schemeFeedbacks = async (req, res) => {
 const getMessages = async (req, res) => {
     try {
         const receiver = req.query.receiver;
-        console.log(receiver);
+        // console.log(receiver);
         const messages = await Message.find({ receiver });
         return ApiResponse(200, 'Messages', messages, res);
     } catch (error) {
@@ -440,10 +441,37 @@ const getMessages = async (req, res) => {
     }
 };
 
+
+// SCHEME EXPLORER
+const modelName = 'gemini-pro';
+const apiKey = process.env.API_KEY;
+const generativeAI = new GoogleGenerativeAI(apiKey);
+const exploreSchemes = async (req, res) => {
+    try {
+        // const { scheme } = req.query;
+        const prompt = req.body.prompt;
+        // console.log("Prompt:", prompt);
+
+        const model = generativeAI.getGenerativeModel({ model: modelName });
+        const response = await model.generateContent([prompt]);
+
+        const generatedText = response?.response?.text();
+        if (!generatedText) {
+            return ApiResponse(400, 'Failed to generate response', null, res);
+        }
+        // console.log("Response:", response);
+        // console.log("Generated Text:", generatedText);
+        return ApiResponse(200, 'Generated', { response: generatedText }, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+}
+
 module.exports = {
     officerNamesUpload, getAllOfficersNames, officerDistrict, officerDistrictData
     , officerDistrictDelete, officerDistrictEdit, governmentSchemes, allGovernmentSchemes,
     governmentSchemesDelete, addOfficer, deleteOfficer, editOfficer, getSingleOfficer, getSingleScheme,
     addSchemeMonitoring, getSingleSchemeMonitoring, getSingleDistrictScheme, getSingleStateProgress,
-    editGovernmentSchemes, getSingleSchemeDetails, addSchemeFeedback, schemeFeedbacks, getMessages
+    editGovernmentSchemes, getSingleSchemeDetails, addSchemeFeedback, schemeFeedbacks, getMessages,
+    exploreSchemes
 };

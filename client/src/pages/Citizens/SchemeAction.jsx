@@ -14,6 +14,7 @@ export default function SchemeAction() {
     const localtion = useLocation();
     const queryParams = new URLSearchParams(localtion.search);
     const name = queryParams.get('name');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -28,7 +29,7 @@ export default function SchemeAction() {
     const getAllSchemes = async () => {
         try {
             const response = await axios.get(`${BASE_URL}/admin/all-govt-schemes`);
-            console.log('response:', response.data.data);
+            // console.log('response:', response.data.data);
             const data = response.data.data;
 
             setSchemes(data);
@@ -50,8 +51,9 @@ export default function SchemeAction() {
     }
 
     const handleSubmit = () => {
-        console.log('formData:', formData);
+        // console.log('formData:', formData);
         try {
+            setLoading(true);
             const response = axios.post(`${BASE_URL}/admin/add-scheme-feedback`, formData);
             toast.success("Feedback submitted successfully", {
                 position: "top-left",
@@ -63,11 +65,16 @@ export default function SchemeAction() {
                 progress: undefined,
                 theme: "light",
             });
+            setLoading(false);
             navigate('/citizens/govt-schemes');
+
         } catch (error) {
+            setLoading(false);
             console.log('error:', error);
         }
     }
+
+    const isDisabled = !formData.feedback_type || !formData.feedback_desc;
     return (
         <div className='m-2 px-4'>
             <Typography variant='h3' size='xl'>Scheme Action</Typography>
@@ -108,6 +115,8 @@ export default function SchemeAction() {
                             type={'submit'}
                             className={'font-bold py-3 px-4 rounded-md mt-2 cursor-pointer'}
                             fullWidth
+                            disabled={isDisabled}
+                            loading={loading}
                         />
                     </div>
                 </div>

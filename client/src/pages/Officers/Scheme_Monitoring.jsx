@@ -23,6 +23,7 @@ export default function Scheme_Monitoring() {
   const [selectedScheme, setSelectedScheme] = useState('');
   const [schemeParameters, setSchemeParameters] = useState([]);
   const [schemeNames, setSchemeNames] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (value, { name }) => {
     setSelectedScheme(value.value);
@@ -66,10 +67,11 @@ export default function Scheme_Monitoring() {
     };
     setFormData(updatedFormData);
 
-    console.log('formData:', updatedFormData);
+    // console.log('formData:', updatedFormData);
     try {
+      setLoading(true);
       const response = await axios.post(`${BASE_URL}/admin/add-scheme-monitoring`, updatedFormData);
-      console.log('Response:', response.data);
+      // console.log('Response:', response.data);
       setFormData({
         govt_scheme: '',
         district: '',
@@ -85,8 +87,10 @@ export default function Scheme_Monitoring() {
         progress: undefined,
         theme: "light",
       });
+      setLoading(false);
       navigate('/officers/dashboard');
     } catch (error) {
+      setLoading(false);
       console.log('Error:', error);
       toast.error(error?.response?.data?.message, {
         position: "top-left",
@@ -102,12 +106,11 @@ export default function Scheme_Monitoring() {
   }
 
 
-
-
-
   useEffect(() => {
     getSchemes();
   }, []);
+
+  const isDisabled = selectedScheme === '' || schemeParameters.some(parameter => parameter.value === '');
 
   return (
     <div className='m-2 px-4'>
@@ -139,7 +142,7 @@ export default function Scheme_Monitoring() {
             ))}
           </div>
           <div className='px-3 float-right'>
-            <ButtonComp name={'Add Monitoring Record'} fullWidth onClick={handleSubmit} />
+            <ButtonComp name={'Add Monitoring Record'} disabled={isDisabled} fullWidth onClick={handleSubmit} loading={loading} />
           </div>
         </div>
 

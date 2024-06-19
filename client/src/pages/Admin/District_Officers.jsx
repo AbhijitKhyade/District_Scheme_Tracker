@@ -48,10 +48,10 @@ export default function District_Officers() {
 
 
   const handleAssignOfficer = async () => {
-    console.log('formData', formData);
+    // console.log('formData', formData);
     try {
       const response = await axios.post(`${BASE_URL}/admin/officer-district-relation`, formData);
-      console.log(response.data.data);
+      // console.log(response.data.data);
       toast.success("Officer assigned successfully", {
         position: "top-left",
         autoClose: 1500,
@@ -87,7 +87,7 @@ export default function District_Officers() {
       officersData.forEach(officer => {
         officersEmails.push(officer.officerEmail);
       });
-      console.log(officersData);
+      // console.log(officersData);
       setOfficersEmail(officersEmails);
       setOfficers(officersNames);
     } catch (error) {
@@ -98,7 +98,7 @@ export default function District_Officers() {
   const getDistrictOfficers = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/admin/officer-district-data`);
-      console.log('District Officers:', response?.data?.data);
+      // console.log('District Officers:', response?.data?.data);
       setDistrictOfficers(response?.data?.data);
     } catch (error) {
       console.log('Error: ', error);
@@ -138,7 +138,7 @@ export default function District_Officers() {
 
   const handleSave = async () => {
     try {
-      console.log('selectedStateId:', selectedStateId);
+      // console.log('selectedStateId:', selectedStateId);
       const { officer, ...editedDistrictWithoutOfficer } = editedDistrict;
       const editedData = {
         ...editedDistrictWithoutOfficer,
@@ -164,7 +164,7 @@ export default function District_Officers() {
   };
 
 
-
+  const isDisabled = !formData.state || !formData.district || !formData.officerName || !formData.officerEmail;
 
   return (
     <div className='m-2 px-4'>
@@ -179,7 +179,7 @@ export default function District_Officers() {
             </p>
           </div>
         </div>
-        <div className="lg:w-3/4 md:w-full mt-4 mb-4 sm:w-full">
+        <div className="lg:w-3/4 w-full mt-4 mb-4 ">
           <Typography variant='h5' >State</Typography>
           <Select
             options={states_districts?.map(state =>
@@ -192,8 +192,8 @@ export default function District_Officers() {
         </div>
       </div>
       <div className="flex flex-col items-center ">
-        <div className="flex items-center justify-center gap-5  mx-3 w-full sm:flex-col lg:flex-row">
-          <div className="w-1/2 sm:w-full">
+        <div className="flex items-center justify-center gap-5  mx-3 w-full flex-col lg:flex-row">
+          <div className="lg:w-1/2 w-full">
             <Typography variant='h5'>Districts</Typography>
             <Select
               options={states_districts?.find(state => state.state === formData.state)?.districts?.map(district =>
@@ -205,7 +205,7 @@ export default function District_Officers() {
               onChange={(value) => handleInputChange(value, { name: "district" })}
             />
           </div>
-          <div className="w-1/2 sm:w-full">
+          <div className="lg:w-1/2 w-full">
             <Typography variant='h5'>Map Url</Typography>
             <Select
               options={Object.keys(districtMaps).map(map =>
@@ -218,8 +218,8 @@ export default function District_Officers() {
             />
           </div>
         </div>
-        <div className="flex items-center justify-center gap-5  mx-3 w-full sm:flex-col lg:flex-row mt-4">
-          <div className="w-1/2 sm:w-full">
+        <div className="flex items-center justify-center gap-5  mx-3 w-full flex-col lg:flex-row mt-4">
+          <div className="lg:w-1/2 w-full">
             <Typography variant='h5'>Officers</Typography>
             <Select
               options={officers?.map(officer => ({ value: officer, label: officer }))}
@@ -230,7 +230,7 @@ export default function District_Officers() {
               classNamePrefix="select"
             />
           </div>
-          <div className="w-1/2 sm:w-full">
+          <div className="lg:w-1/2 w-full">
             <Typography variant='h5'>Officers Email</Typography>
             <Select
               options={officersEmail?.map(officer => ({ value: officer, label: officer }))}
@@ -251,7 +251,7 @@ export default function District_Officers() {
               <p>Selected Officer: {formData.officerName}</p>
             </div>
           )}
-          <ButtonComp name={"Assign Officer"} onClick={handleAssignOfficer} type={'submit'} disabled={!formData.district || !formData.officer} className={'font-bold py-3 px-4 rounded-md mt-2 cursor-pointe'} fullWidth />
+          <ButtonComp name={"Assign Officer"} disabled={isDisabled} onClick={handleAssignOfficer} type={'submit'} className={'font-bold py-3 px-4 rounded-md mt-2 cursor-pointe'} fullWidth />
         </div>
       </div>
 

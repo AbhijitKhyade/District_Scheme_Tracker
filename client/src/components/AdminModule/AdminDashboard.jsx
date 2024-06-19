@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Chart as ChartJs, defaults } from 'chart.js/auto';
 import { BASE_URL } from '../../api';
-import { states_districts } from '../../data';
+import { districtMaps, states_districts } from '../../data';
 import Select from 'react-select';
 import BarChart from '../Charts/BarChart';
 
@@ -23,7 +23,7 @@ export default function AdminDashboard() {
     try {
       const response = await axios.get(`${BASE_URL}/admin/get-single-state-progress?state=${formData.state}&district=${formData.district}`);
       const data = response.data.data;
-      console.log(data)
+      // console.log(data)
       setSchemeProgress(data);
     } catch (error) {
       console.log('error:', error);
@@ -47,7 +47,7 @@ export default function AdminDashboard() {
     const labels = schemeProgress.map(scheme => `${scheme.govt_scheme}`);
     const data = schemeProgress.map(scheme => parseFloat(scheme.percentageProgress));
     const title = "Scheme Progress";
-    console.log(data, labels)
+    // console.log(data, labels)
 
     return <BarChart labels={labels} data={data} title={title} yAxisMax={100} />;
   };
@@ -55,8 +55,8 @@ export default function AdminDashboard() {
   return (
     <div className='m-2 px-4'>
       <Typography variant='h3' className='mb-4 text-center'>Scheme Dashboard</Typography>
-      <div className='flex items-center justify-center gap-5  w-full sm:flex-col lg:flex-row'>
-        <div className="w-1/2 sm:w-full">
+      <div className='flex items-center justify-center gap-5  w-full flex-col lg:flex-row'>
+        <div className="w-full lg:w-1/2">
           <Typography variant='h5' >State</Typography>
           <Select
             options={states_districts?.map(state =>
@@ -67,7 +67,7 @@ export default function AdminDashboard() {
             classNamePrefix="select"
           />
         </div>
-        <div className="w-1/2 sm:w-full">
+        <div className="w-full lg:w-1/2">
           <Typography variant='h5'>Districts</Typography>
           <Select
             options={states_districts?.find(state => state.state === formData.state)?.districts?.map(district =>
@@ -91,7 +91,7 @@ export default function AdminDashboard() {
           <div className='mt-4'>
             <Typography variant='h4' className='mb-4 text-center'><span className='text-deep-orange-400'>{formData.district}</span> District Map</Typography>
             <div className='flex justify-center shadow-md'>
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Solapur_district_tehsils.svg/1024px-Solapur_district_tehsils.svg.png" alt={'distrcit name'} className='object-cover' />
+              <img src={districtMaps[formData.district]} alt={'distrcit name'} className='object-cover' />
             </div>
           </div>
         </>

@@ -64,8 +64,8 @@ export default function Scheme_Tracking() {
         </div>
       </div>
 
-      <div className='flex items-center justify-center gap-5 mt-4  w-full sm:flex-col lg:flex-row'>
-        <div className="w-1/2 sm:w-full">
+      <div className='flex items-center justify-center gap-5 mt-4  w-full flex-col lg:flex-row'>
+        <div className="lg:w-1/2 w-full">
           <Typography variant='h5' >State</Typography>
           <Select
             options={states_districts?.map(state =>
@@ -76,7 +76,7 @@ export default function Scheme_Tracking() {
             classNamePrefix="select"
           />
         </div>
-        <div className="w-1/2 sm:w-full">
+        <div className="lg:w-1/2 w-full">
           <Typography variant='h5'>Districts</Typography>
           <Select
             options={states_districts?.find(state => state.state === formData.state)?.districts?.map(district =>
