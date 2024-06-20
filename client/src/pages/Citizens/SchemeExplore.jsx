@@ -46,7 +46,7 @@ const SchemeExplore = () => {
                 return <strong key={index}>{part}</strong>;
             } else {
                 // Even indices (non-bold parts)
-                return part;
+                return part.split('*').map((line, i) => <React.Fragment key={i}>{line}<br /></React.Fragment>);
             }
         });
 
@@ -104,7 +104,7 @@ const SchemeExplore = () => {
                         key={index}
                         color="gray"
                         buttonType="link"
-                        className='cursor-pointer bg-gray-300 rounded-full px-4 py-2 text-center'
+                        className='cursor-pointer bg-gray-300 rounded-full text-sm lg:text-base px-4 py-2 text-center '
                         size="regular"
                         rounded={true}
                         block={false}
@@ -123,7 +123,7 @@ const SchemeExplore = () => {
                 <div className="border-2 border-gray-300 p-4 rounded mb-4">
                     {results.map((result, index) => (
                         <div key={index}>
-                            <Typography variant='body1' component='div' className="mt-2">
+                            <Typography variant='body1' component='div' className="mt-2 text-justify">
                                 {result.content}
                             </Typography>
                         </div>

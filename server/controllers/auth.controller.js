@@ -11,7 +11,7 @@ const registerController = async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (user) {
-            return ApiError(400, 'Email already exists', null, res);
+            return ApiError(400, 'Email already exists. Please Login!', null, res);
         }
 
         const hashedPassword = await hashPassword(password);
@@ -49,7 +49,7 @@ const verifyOfficerController = async (req, res) => {
     try {
         const existingOfficer = await Officer.findOne({ officerEmail: email });
         if (!existingOfficer) {
-            return ApiError(400, 'Officer email not found!', null, res);
+            return ApiError(400, 'Your are not assigned to any District!', null, res);
         }
         const hashedPassword = await hashPassword(password);
         await User.create({ name, email, password: hashedPassword, role: role });

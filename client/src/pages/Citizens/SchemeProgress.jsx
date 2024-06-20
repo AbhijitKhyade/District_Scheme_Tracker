@@ -98,7 +98,7 @@ export default function SchemeProgress() {
     };
 
     return (
-        <div className='m-2 px-4 h-auto'>
+        <div className='m-2 px-4 h-auto overflow-auto'>
             <Typography variant='h3' size='xl'>Scheme Progress</Typography>
             <p className='mt-3 flex justify-between'>
                 <div className='text-xl text-blue-gray-800 font-semibold  border-gray-700'>{name}</div>

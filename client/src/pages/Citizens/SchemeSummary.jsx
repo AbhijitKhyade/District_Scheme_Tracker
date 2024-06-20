@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Chart as ChartJs, defaults } from 'chart.js/auto';
 import { BASE_URL } from '../../api';
-import PieChart from '../../components/Charts/PieChart';
 import BarChart from '../../components/Charts/BarChart';
 
 defaults.maintainAspectRatio = false;
@@ -14,6 +13,7 @@ defaults.plugins.title.display = true;
 defaults.plugins.title.align = "start";
 defaults.plugins.title.font.size = 20;
 defaults.plugins.title.color = "black";
+
 export default function SchemeSummary() {
   const currentUser = useSelector(state => state.user.currentUser);
   const district = currentUser?.district;
@@ -35,18 +35,30 @@ export default function SchemeSummary() {
   }, []);
 
   const generateCharts = () => {
-    const labels = schemeProgress.map(scheme => scheme.govt_scheme);
+    const labels = schemeProgress.map(scheme => scheme.govt_scheme.split(' ' || '(').map(word => word[0]).join(''));
     const data = schemeProgress.map(scheme => parseFloat(scheme.percentageProgress));
     const title = "Scheme Progress";
 
-    return <BarChart labels={labels} data={data} title={title}  yAxisMax={100}/>;
+    return <BarChart labels={labels} data={data} title={title} yAxisMax={100} />;
   };
 
   return (
     <div className='m-2 px-4'>
       <Typography color="blue" variant='h3'>Scheme Summary for <span className='text-deep-orange-400'>{district}</span></Typography>
-      <div className='w-full' style={{ height: '400px' }}>
+      <div className='w-full h-[500px] sm:h-[300] overflow-x-auto'>
         {generateCharts()}
+      </div>
+      <div className='mt-4'>
+        <Typography variant='h6'>Scheme Names:</Typography>
+        <ul>
+          {schemeProgress.map(scheme => (
+            <li key={scheme.govt_scheme}>
+              <Typography variant='body1'>
+                {scheme.govt_scheme.split(' ').map(word => word[0]).join('')}: {scheme.govt_scheme}
+              </Typography>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

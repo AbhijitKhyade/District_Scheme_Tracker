@@ -85,8 +85,8 @@ export default function Register() {
       });
       return;
     }
-    else if (!formData.name && !formData.email && !formData.password) {
-      toast.warning("Please enter your email and password", {
+    else if (!formData.name) {
+      toast.warning("Please enter your name", {
         position: "top-left",
         autoClose: 1500,
         hideProgressBar: false,
@@ -306,9 +306,9 @@ export default function Register() {
                     onChange={handleInputChange}
                   /> */}
                   <Select
-                    label='District'
                     size="lg"
                     name='district'
+                    label={"Select District"}
                     value={formData.district}
                     onChange={(value) =>
                       handleInputChange({

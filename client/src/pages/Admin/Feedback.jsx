@@ -16,6 +16,7 @@ const Feedback = () => {
   const [scheme, setScheme] = useState('');
   const [schemeNames, setSchemeNames] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [noFeedbacks, setNoFeedbacks] = useState(false);
   const itemsPerPage = 3;
 
 
@@ -47,8 +48,9 @@ const Feedback = () => {
       setLoading(true);
 
       const res = await axios.get(`${BASE_URL}/admin/scheme-feedbacks?district=${district}&govt_scheme=${scheme}`);
-      // console.log(res.data.data[0].feedback);
-      setFeedbacks(res.data.data[0].feedback);
+      const feedbackData = res.data.data[0]?.feedback || [];
+      setFeedbacks(feedbackData);
+      setNoFeedbacks(feedbackData.length === 0);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -107,26 +109,35 @@ const Feedback = () => {
           />
         </div>
       </div>
-      {feedbacks.length > 0 &&
+      {!scheme ? <Typography className='text-center' color="red" variant='h6' size="lg">Please select a scheme to view feedbacks</Typography> :
         <>
-          <div className='mt-3  '>
+          <div className='mt-3'>
             <div>
               <h2 className="text-xl font-semibold mt-6 mb-2">Issue Reports</h2>
-              <div className="flex flex-wrap ">
-                {renderFeedbacksByType('IssueReport')}
-              </div>
+              {noFeedbacks ? <p className="text-center">No feedbacks yet!</p> :
+                <>
+                  <div className="flex flex-wrap">
+                    {renderFeedbacksByType('IssueReport')}
+                  </div>
+                </>}
             </div>
             <div>
               <h2 className="text-xl font-semibold mt-6 mb-2">Suggestions</h2>
-              <div className="flex flex-wrap">
-                {renderFeedbacksByType('Suggestion')}
-              </div>
+              {noFeedbacks ? <p className="text-center">No feedbacks yet!</p> :
+                <>
+                  <div className="flex flex-wrap">
+                    {renderFeedbacksByType('Suggestion')}
+                  </div>
+                </>}
             </div>
             <div>
               <h2 className="text-xl font-semibold mt-6 mb-2">General Feedback</h2>
-              <div className="flex flex-wrap">
-                {renderFeedbacksByType('GeneralFeedback')}
-              </div>
+              {noFeedbacks ? <p className="text-center">No feedbacks yet!</p> :
+                <>
+                  <div className="flex flex-wrap">
+                    {renderFeedbacksByType('GeneralFeedback')}
+                  </div>
+                </>}
             </div>
             <div className="flex justify-center mt-6">
               <Button

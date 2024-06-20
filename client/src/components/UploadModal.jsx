@@ -61,6 +61,9 @@ const UploadModal = ({ isOpen, onClose }) => {
                         </div>
                     </label>
                 </div>
+                <div className='mt-2 mb-2'>
+                    <p>View reference: <a href="/sample.xlsx" target="_blank" rel="noopener noreferrer" className='text-blue-500 hover:text-blue-700' onClick={onClose}>Download Sample Excel File</a></p>
+                </div>
                 <div className="flex justify-end mt-4">
                     <button onClick={onClose} className="mr-2 px-4 py-2 bg-red-500 text-white rounded-md">Cancel</button>
                     <button onClick={handleUpload} className="px-4 py-2 bg-blue-500 text-white rounded-md">Upload</button>
