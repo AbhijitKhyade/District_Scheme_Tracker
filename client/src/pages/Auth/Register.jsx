@@ -157,19 +157,20 @@ export default function Register() {
       } else {
         const response = await axios.post(`${BASE_URL}/auth/verify-officer`, formData);
         // console.log(response.data);
+        toast.success(response?.data.message, {
+          position: "top-left",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
         navigate('/auth/login');
       }
       setLoading(false);
-      toast.success(response?.data.message, {
-        position: "top-left",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+
 
     } catch (error) {
       console.log('Error:', error?.response?.data?.message);

@@ -5,6 +5,7 @@ const ApiResponse = require('../utils/ApiResponse');
 const { hashPassword, comparePassword } = require('../utils/passwords');
 const generateToken = require('../utils/generateToken');
 const sendEmail = require('../utils/EmailService');
+const DistrictOfficer = require('../models/district-officer.model');
 
 const registerController = async (req, res) => {
     const { name, email, password, role, district } = req.body;
@@ -47,10 +48,14 @@ const loginController = async (req, res) => {
 const verifyOfficerController = async (req, res) => {
     const { name, email, password, role } = req.body;
     try {
-        const existingOfficer = await Officer.findOne({ officerEmail: email });
+        // console.log(req.body);
+        const existingOfficer = await DistrictOfficer.findOne({
+            'states.districts.officer.officerEmail': email
+        });
         if (!existingOfficer) {
             return ApiError(400, 'Your are not assigned to any District!', null, res);
         }
+        // console.log(existingOfficer);
         const hashedPassword = await hashPassword(password);
         await User.create({ name, email, password: hashedPassword, role: role });
 

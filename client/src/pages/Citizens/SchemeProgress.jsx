@@ -49,9 +49,25 @@ export default function SchemeProgress() {
         getSchemeProgress();
     }, []);
 
+    const findFirstWord = (name) => {
+        // Trim any leading or trailing whitespace
+        const trimmedName = name.trim();
+
+        // Find the index of the first space
+        const spaceIndex = trimmedName.indexOf(' ');
+
+        if (spaceIndex !== -1) {
+            // If there is a space, return the substring from the start to the first space
+            return trimmedName.substring(0, spaceIndex);
+        } else {
+            // If there is no space, return the entire string
+            return trimmedName;
+        }
+    };
     const generateCharts = () => {
         return schemeProgress.parameters.map((parameter, index) => {
-            const chartType = determineChartType(parameter.value);
+            const name = findFirstWord(parameter.name);
+            const chartType = determineChartType(name);
             const { labels, data } = generateChartData(parameter);
             return (
                 <div key={index} className='w-full mt-5' style={{ height: '400px' }}>
@@ -61,19 +77,16 @@ export default function SchemeProgress() {
         });
     };
 
-    const determineChartType = (value) => {
-        if (Array.isArray(value)) {
-            const isNumericArray = value.every((val) => !isNaN(val));
-            // console.log('isNumericArray:', isNumericArray)
-            if (isNumericArray) {
-                return "bar"; // For numerical arrays, use a line chart
-            } else {
-                return "pie"; // For other arrays, use a pie chart
-            }
+    const determineChartType = (firstWord) => {
+
+        if (firstWord === "Number" || firstWord === "Quantity" || firstWord === "Amount") {
+            return "bar"; // Use a bar chart for numerical data
         } else {
-            return "bar"; // For single numerical value, use a bar chart
+            return "pie"; // Use a pie chart for other types of arrays
         }
+
     };
+
 
 
 

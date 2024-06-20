@@ -67,9 +67,27 @@ export default function SingleSchemeDetails() {
         getSchemeProgress();
     }, [formData.govt_scheme, formData.district]);
 
+    const findFirstWord = (name) => {
+        // Trim any leading or trailing whitespace
+        const trimmedName = name.trim();
+
+        // Find the index of the first space
+        const spaceIndex = trimmedName.indexOf(' ');
+
+        if (spaceIndex !== -1) {
+            // If there is a space, return the substring from the start to the first space
+            return trimmedName.substring(0, spaceIndex);
+        } else {
+            // If there is no space, return the entire string
+            return trimmedName;
+        }
+    };
     const generateCharts = () => {
         return formData.parameters.map((parameter, index) => {
-            const chartType = determineChartType(parameter.value);
+            // console.log(parameter.name)
+            let name = findFirstWord(parameter.name);
+            // console.log(name)
+            const chartType = determineChartType(name);
             const { labels, data } = generateChartData(parameter);
             return (
                 <div key={index} className='w-full mt-5' style={{ height: '400px' }}>
@@ -79,19 +97,19 @@ export default function SingleSchemeDetails() {
         });
     };
 
-    const determineChartType = (value) => {
-        if (Array.isArray(value)) {
-            const isNumericArray = value.every((val) => !isNaN(val));
-            // console.log('isNumericArray:', isNumericArray)
-            if (isNumericArray) {
-                return "bar"; // For numerical arrays, use a line chart
-            } else {
-                return "pie"; // For other arrays, use a pie chart
-            }
+    const determineChartType = (firstWord) => {
+
+        // Check if the first word includes keywords that suggest a bar chart
+        // Get the first word and convert to lowercase
+        // console.log(firstWord)
+        if (firstWord === "Number" || firstWord === "Quantity" || firstWord === "Amount") {
+            return "bar"; // Use a bar chart for numerical data
         } else {
-            return "bar"; // For single numerical value, use a bar chart
+            return "pie"; // Use a pie chart for other types of arrays
         }
+
     };
+
 
 
 
@@ -99,21 +117,23 @@ export default function SingleSchemeDetails() {
     const generateChartData = (parameter) => {
         const labels = parameter.value.map((_, index) => `Month ${index + 1}`);
         const data = parameter.value.map(value => Number(value));
+        // console.log(data);
         return { labels, data };
     };
 
     const renderChart = (type, labels, data, title) => {
         switch (type) {
             case "bar":
-                return <BarChart labels={labels} data={data} title={title} />;
+                return <BarChart labels={labels} data={data} title={title} max={Math.max(...data)} />;
             case "line":
-                return <LineChart labels={labels} data={data} title={title} />;
+                return <LineChart labels={labels} data={data} title={title} max={Math.max(...data)} />;
             case "pie":
                 return <PieChart labels={labels} data={data} title={title} />;
             default:
                 return null;
         }
     };
+
 
     return (
         <div className='m-2 px-4 h-screen'>

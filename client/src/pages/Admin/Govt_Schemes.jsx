@@ -7,6 +7,9 @@ import axios from 'axios';
 import { BASE_URL } from '../../api';
 import ModalComp from '../../components/ModalComp';
 import { Link } from 'react-router-dom';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 export default function GovtSchemes() {
   const [formData, setFormData] = useState({
@@ -36,12 +39,22 @@ export default function GovtSchemes() {
     try {
       const response = await axios.post(`${BASE_URL}/admin/govt-schemes`, formData);
       // console.log('response : ', response?.data?.data);
+      toast.success(response.data.message, {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       setFormData({
         scheme: "",
         objective: "",
         description: "",
         parameters: ""
-      })
+      });
+
       allGovtSchemes();
     } catch (error) {
       console.log('Error:', error);

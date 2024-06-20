@@ -72,6 +72,15 @@ export default function District_Officers() {
 
     } catch (error) {
       console.log('Error: ', error.response.data.message);
+      toast.error(error.response.data.message, {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
@@ -113,20 +122,28 @@ export default function District_Officers() {
   const handleDeleteConfirmation = async () => {
     try {
       const response = await axios.delete(`${BASE_URL}/admin/officer-district-delete?id=${selectedDeleteId}&stateId=${selectedStateId}`);
-      if (response.data.message === 'District Officer deleted successfully') {
-        toast.success("District Officer deleted successfully", {
-          position: "top-left",
-          autoClose: 1500,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
+      toast.success("District Officer deleted successfully", {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
       await getDistrictOfficers(); // Refresh district officers data
     } catch (error) {
       console.error('Error deleting district officer:', error);
+      toast.error("Error deleting district officer", {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
     setDeleteDialogOpen(false);
   };

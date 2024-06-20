@@ -8,6 +8,7 @@ import { BASE_URL } from '../../api';
 import PieChart from '../../components/Charts/PieChart';
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { Link } from 'react-router-dom';
+import BarChart from '../../components/Charts/BarChart';
 
 
 defaults.maintainAspectRatio = false;
@@ -50,7 +51,7 @@ export default function Scheme_Tracking() {
     const data = schemeProgress.map(scheme => parseFloat(scheme.percentageProgress));
     const title = "Scheme Progress";
 
-    return <PieChart labels={labels} data={data} title={title} />;
+    return <BarChart labels={labels} data={data} title={title} yAxisMax={100}  />;
   };
   return (
     <div className='m-2 px-4'>
