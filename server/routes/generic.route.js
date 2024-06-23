@@ -8,7 +8,8 @@ const { officerNamesUpload, getAllOfficersNames, officerDistrict,
     addSchemeFeedback,
     schemeFeedbacks,
     getMessages,
-    exploreSchemes
+    exploreSchemes,
+    getOfficerDistrict
 } = require('../controllers/generic.controller');
 
 const router = express.Router();
@@ -24,6 +25,7 @@ router.post('/add-officer', addOfficer);
 router.delete('/delete-officer', deleteOfficer);
 router.put('/edit-officer', editOfficer);
 router.get('/get-single-officer', getSingleOfficer);
+router.get('/get-officer-district', getOfficerDistrict);
 
 //Govt-Schemes
 router.post('/govt-schemes', governmentSchemes);

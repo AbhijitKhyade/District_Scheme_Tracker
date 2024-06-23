@@ -228,6 +228,47 @@ const getSingleOfficer = async (req, res) => {
     }
 };
 
+const getOfficerDistrict = async (req, res) => {
+    try {
+        const officerEmail = req.query.email;
+
+        // Find the officer using their email and project the necessary fields
+        const officer = await DistrictOfficer.findOne(
+            { "states.districts.officer.officerEmail": officerEmail },
+            { "states.$": 1 } // Project only the matched state and districts
+        );
+
+        if (!officer) {
+            return ApiResponse(404, 'Officer not found', null, res);
+        }
+
+        // Extract the district data
+        let district = null;
+        officer.states.some(state => {
+            const foundDistrict = state.districts.find(district =>
+                district.officer.some(officer => officer.officerEmail === officerEmail)
+            );
+            if (foundDistrict) {
+                district = foundDistrict;
+                return true; // Breaks out of the loop once the district is found
+            }
+            return false;
+        });
+
+        if (!district) {
+            return ApiResponse(404, 'District not found for the given officer', null, res);
+        }
+
+        // Return the district data
+        return ApiResponse(200, 'Officer district retrieved successfully', district, res);
+    } catch (error) {
+        return ApiError(500, error.message, error, res);
+    }
+};
+
+
+
+
 
 // GOVT SCHEMES
 const governmentSchemes = async (req, res) => {
@@ -473,5 +514,5 @@ module.exports = {
     governmentSchemesDelete, addOfficer, deleteOfficer, editOfficer, getSingleOfficer, getSingleScheme,
     addSchemeMonitoring, getSingleSchemeMonitoring, getSingleDistrictScheme, getSingleStateProgress,
     editGovernmentSchemes, getSingleSchemeDetails, addSchemeFeedback, schemeFeedbacks, getMessages,
-    exploreSchemes
+    exploreSchemes, getOfficerDistrict
 };

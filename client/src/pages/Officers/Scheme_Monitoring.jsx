@@ -8,13 +8,15 @@ import { getDistrict } from '../../components/OfficersModule/OfficersDashboard';
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from 'react-redux';
 
 export default function Scheme_Monitoring() {
+  const currentUser = useSelector((state) => state.user.currentUser);
   let district = getDistrict();
   // console.log('district:', district)
   const [formData, setFormData] = useState({
     govt_scheme: '',
-    district: district,
+    district: '',
     parameters: [],
     state: "Maharashtra",
   });
@@ -67,7 +69,7 @@ export default function Scheme_Monitoring() {
     };
     setFormData(updatedFormData);
 
-    // console.log('formData:', updatedFormData);
+    console.log('formData:', updatedFormData);
     try {
       setLoading(true);
       const response = await axios.post(`${BASE_URL}/admin/add-scheme-monitoring`, updatedFormData);
@@ -106,7 +108,23 @@ export default function Scheme_Monitoring() {
   }
 
 
+  const getOfficerDistrict = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/admin/get-officer-district?email=${currentUser.email}`);
+      // console.log('response:', response.data.data.districtName);
+      setFormData({
+        ...formData,
+        district: response.data.data.districtName
+      })
+
+    } catch (error) {
+      console.log('error:', error);
+    }
+  };
+
+
   useEffect(() => {
+    getOfficerDistrict();
     getSchemes();
   }, []);
 
