@@ -112,14 +112,17 @@ export default function SchemeProgress() {
 
     return (
         <div className='m-2 px-4 h-auto overflow-auto'>
-            <Typography variant='h3' size='xl'>Scheme Progress</Typography>
+            <Typography variant='h3' size='xl'>Scheme Progress </Typography>
             <p className='mt-3 flex justify-between'>
                 <div className='text-xl text-blue-gray-800 font-semibold  border-gray-700'>{name}</div>
                 <div className='flex gap-4'>
                     <div className='flex gap-3'>
-                        <Link to={`/citizens/scheme?action=feedback&name=${name}`} className='flex items-center gap-1'>
-                            <Typography color='blue-gray' variant='h6' size='sm'>Feedback</Typography>
-                            <RiFeedbackFill />
+                        <Link to={`/citizens/scheme?action=feedback&name=${name}`} className='flex flex-col'>
+                            <p className='text-red-400'>*Give Feedback here</p>
+                            <div className='flex items-center gap-1'>
+                                <Typography color='blue-gray' variant='h6' size='sm'>Feedback</Typography>
+                                <RiFeedbackFill />
+                            </div>
                         </Link>
                     </div>
                 </div>

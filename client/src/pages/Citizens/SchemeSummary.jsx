@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { Chart as ChartJs, defaults } from 'chart.js/auto';
 import { BASE_URL } from '../../api';
 import BarChart from '../../components/Charts/BarChart';
+import PieChart from '../../components/Charts/PieChart';
 
 defaults.maintainAspectRatio = false;
 defaults.responsive = true;
@@ -37,9 +38,9 @@ export default function SchemeSummary() {
   const generateCharts = () => {
     const labels = schemeProgress.map(scheme => scheme.govt_scheme.split(' ' || '(').map(word => word[0]).join(''));
     const data = schemeProgress.map(scheme => parseFloat(scheme.percentageProgress));
-    const title = "Scheme Progress";
+    const title = "Scheme Progress (%)";
 
-    return <BarChart labels={labels} data={data} title={title} yAxisMax={100} />;
+    return <PieChart labels={labels} data={data} title={title} />;
   };
 
   return (
@@ -47,6 +48,7 @@ export default function SchemeSummary() {
       <Typography color="blue" variant='h3'>Scheme Summary for <span className='text-deep-orange-400'>{district}</span></Typography>
       <div className='w-full h-[500px] sm:h-[300] overflow-x-auto'>
         {generateCharts()}
+
       </div>
       <div className='mt-4'>
         <Typography variant='h6'>Scheme Names:</Typography>

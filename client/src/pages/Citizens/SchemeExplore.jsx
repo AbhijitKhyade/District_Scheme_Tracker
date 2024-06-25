@@ -3,6 +3,8 @@ import { Button, Card, Input, Typography } from '@material-tailwind/react';
 import axios from 'axios';
 import Loader from '../../components/Loader';
 import { BASE_URL } from '../../api';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SchemeExplore = () => {
     const [query, setQuery] = useState('');
@@ -18,10 +20,31 @@ const SchemeExplore = () => {
             } else {
                 setLoading(false);
                 console.error("Failed to fetch scheme details:", response);
+                toast.error('Refresh the page and try again', {
+                    position: "top-left",
+                    autoClose: 1500,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
             }
             setLoading(false);
         } catch (error) {
             setLoading(false);
+            toast.error('Refresh the page and try again', {
+                position: "top-left",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            
             console.error("Error fetching scheme details:", error);
         }
     };
@@ -104,7 +127,7 @@ const SchemeExplore = () => {
                         key={index}
                         color="gray"
                         buttonType="link"
-                        className='cursor-pointer bg-gray-300 rounded-full text-sm lg:text-base px-4 py-2 text-center '
+                        className='cursor-pointer bg-gray-300 hover:bg-gray-400 rounded-full text-sm lg:text-base px-4 py-2 text-center '
                         size="regular"
                         rounded={true}
                         block={false}
@@ -120,10 +143,10 @@ const SchemeExplore = () => {
 
 
             {results.length > 0 && (
-                <div className="border-2 border-gray-300 p-4 rounded mb-4">
+                <div className="border-2 border-gray-300 p-4 rounded mb-2">
                     {results.map((result, index) => (
                         <div key={index}>
-                            <Typography variant='body1' component='div' className="mt-2 text-justify">
+                            <Typography variant='body1' component='p' className="mt-2 text-justify">
                                 {result.content}
                             </Typography>
                         </div>
