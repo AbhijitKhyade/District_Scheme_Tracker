@@ -131,7 +131,7 @@ export default function Scheme_Monitoring() {
   const isDisabled = selectedScheme === '' || schemeParameters.some(parameter => parameter.value === '');
 
   return (
-    <div className='m-2 px-4'>
+    <div className='m-2 px-4 h-screen'>
       <Typography variant='h3' size='xl' className='text-center'>Scheme Monitoring</Typography>
       <div className="flex flex-col items-center ">
         <div className="lg:w-3/4 w-full mt-4 mb-4">

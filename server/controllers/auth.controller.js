@@ -28,7 +28,9 @@ const registerController = async (req, res) => {
 const loginController = async (req, res) => {
     const { email, password } = req.body;
     try {
+        // console.log(email);
         const existingUser = await User.findOne({ email });
+        // console.log(existingUser);
         if (!existingUser) {
             return ApiError(400, 'User not found!', null, res);
         }
@@ -38,6 +40,12 @@ const loginController = async (req, res) => {
         }
         const token = await generateToken(existingUser);
         const user = { id: existingUser.id, name: existingUser.name, email: existingUser.email, role: existingUser.role, district: existingUser.district, token };
+        // Set the token as a cookie
+        res.cookie('token', token, {
+            httpOnly: false, // Cookie is only accessible via HTTP(S)
+            secure: process.env.NODE_ENV === 'production', // Enable secure cookie in production
+            maxAge: 3 * 60 * 60 * 1000, // 3 hours expiration
+        });
         return ApiResponse(200, 'Login successful', data = user, res);
     } catch (error) {
         console.log('Server Error: ', error.message);
@@ -52,10 +60,11 @@ const verifyOfficerController = async (req, res) => {
         const existingOfficer = await DistrictOfficer.findOne({
             'states.districts.officer.officerEmail': email
         });
+        console.log('res: ', existingOfficer);
         if (!existingOfficer) {
             return ApiError(400, 'Your are not assigned to any District!', null, res);
         }
-        // console.log(existingOfficer);
+
         const hashedPassword = await hashPassword(password);
         await User.create({ name, email, password: hashedPassword, role: role });
 
