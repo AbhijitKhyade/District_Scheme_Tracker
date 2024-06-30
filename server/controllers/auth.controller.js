@@ -83,7 +83,7 @@ const sendEmailController = async (req, res) => {
     }
     subject = 'Password Reset';
 
-    const resetUrl = `${process.env.RESET_PASSWORD_URL}/auth/reset-password`;
+    const resetUrl = `${process.env.RESET_PASSWORD_URL}auth/reset-password`;
     // const text = `Click reset password to reset your password: ${resetUrl}`;
     const textContent = `
     Hi,
