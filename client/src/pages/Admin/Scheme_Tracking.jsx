@@ -54,7 +54,7 @@ export default function Scheme_Tracking() {
     return <BarChart labels={labels} data={data} title={title} yAxisMax={100}  />;
   };
   return (
-    <div className='m-2 px-4'>
+    <div className='m-2 px-4 h-screen'>
       <div className='flex justify-between items-center '>
         <Typography variant='h3' >Scheme Progress</Typography>
         <div >

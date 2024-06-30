@@ -53,7 +53,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className='m-2 px-4'>
+    <div className='m-2 px-4 h-screen'>
       <Typography variant='h3' className='mb-4 text-center'>Scheme Dashboard</Typography>
       <div className='flex items-center justify-center gap-5  w-full flex-col lg:flex-row'>
         <div className="w-full lg:w-1/2">

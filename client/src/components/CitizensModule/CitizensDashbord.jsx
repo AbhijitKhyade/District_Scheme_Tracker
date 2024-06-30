@@ -20,7 +20,7 @@ export default function CitizensDashboard() {
   const stateOfDistrict = findState(currentUser?.district);
 
   return (
-    <div className='m-2 px-4'>
+    <div className='m-2 px-4 h-screen'>
       <Typography variant='h3' className='mb-4 text-center'>Welcome to <span className='text-red-400'>{stateOfDistrict}</span> State </Typography>
       <Typography variant='h4' className='mb-4 text-center'>Welcome to <span className='text-deep-orange-400'>{currentUser?.district}</span> District</Typography>
       <div className='flex justify-center shadow-md'>

@@ -39,7 +39,7 @@ export default function OfficersDashboard() {
   }, []);
   districtValue = district;
   return (
-    <div className='m-2 px-4'>
+    <div className='m-2 px-4 h-screen'>
       <Typography variant='h3' className='mb-4 text-center'>Welcome to <span className='text-red-400'>{state}</span> State </Typography>
       <Typography variant='h4' className='mb-4 text-center'>You are assigned to <span className='text-deep-orange-400'>{district}</span> District</Typography>
       <div className='flex justify-center shadow-md'>
